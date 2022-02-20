@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{030B1947-80EC-45DD-8F87-A8C281BCFA18}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GbfRaidFinder", "src\GbfRaidFinder\GbfRaidFinder.csproj", "{B93D416B-753B-4980-AA1B-13F7AE2BC073}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{9A73ABD5-1773-4C96-861C-A83761C02788}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GbfRaidFinder.Tests", "test\GbfRaidFinder.Tests\GbfRaidFinder.Tests.csproj", "{5C61F083-9880-41F8-874C-14E20BCD35BB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B93D416B-753B-4980-AA1B-13F7AE2BC073}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B93D416B-753B-4980-AA1B-13F7AE2BC073}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B93D416B-753B-4980-AA1B-13F7AE2BC073}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B93D416B-753B-4980-AA1B-13F7AE2BC073}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C61F083-9880-41F8-874C-14E20BCD35BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C61F083-9880-41F8-874C-14E20BCD35BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C61F083-9880-41F8-874C-14E20BCD35BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C61F083-9880-41F8-874C-14E20BCD35BB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B93D416B-753B-4980-AA1B-13F7AE2BC073} = {030B1947-80EC-45DD-8F87-A8C281BCFA18}
+		{5C61F083-9880-41F8-874C-14E20BCD35BB} = {9A73ABD5-1773-4C96-861C-A83761C02788}
+	EndGlobalSection
+EndGlobal
