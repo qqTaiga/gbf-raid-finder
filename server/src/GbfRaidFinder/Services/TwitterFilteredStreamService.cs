@@ -1,3 +1,4 @@
+using System.Text.Json;
 using GbfRaidFinder.Models;
 using GbfRaidFinder.Models.Enums;
 using GbfRaidFinder.Models.Settings;
@@ -21,7 +22,7 @@ public class TwitterFilteredStreamService : ITwitterFilteredStreamService
         _urls = urls.Value;
     }
 
-    public async Task<HttpResult> AddRule(TwitterFilteredStreamRuleActions action,
+    public async Task<HttpResult> ModifyRule(TwitterFilteredStreamRuleActions action,
             bool dryRun,
             TwitterFilteredStreamRule[] rules)
     {
@@ -37,26 +38,42 @@ public class TwitterFilteredStreamService : ITwitterFilteredStreamService
         {
             content = JsonContent.Create(new
             {
-                delete = new { add = rules }
+                delete = new { delete = rules }
             });
         }
-        var httpRequestMessage = new HttpRequestMessage(
-            action == TwitterFilteredStreamRuleActions.Retrieve ? HttpMethod.Get : HttpMethod.Post,
+        if (content != null)
+        {
+            content.Headers.ContentType =
+                new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+        }
+
+        var request = new HttpRequestMessage(
+            HttpMethod.Post,
             _urls.TwitterFilteredStreamRules)
         {
             Headers =
             {
-                { HeaderNames.ContentType, "application/json" },
                 { HeaderNames.Authorization, "Bearer" + _keys.TwitterJwtToken }
             },
             Content = content
         };
 
         var httpClient = _httpClientFactory.CreateClient();
-        var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
+        var response = await httpClient.SendAsync(request);
 
-        // TODO
-        return null;
+        if (response.IsSuccessStatusCode)
+        {
+            return new HttpResult(true);
+        }
+        else
+        {
+            var contentStream = await response.Content.ReadAsStreamAsync();
+            HttpResult result = new(false)
+            {
+                ErrorDesc = await JsonSerializer.Deserialize<dynamic>(contentStream)
+            };
+            return result;
+        }
     }
 }
 

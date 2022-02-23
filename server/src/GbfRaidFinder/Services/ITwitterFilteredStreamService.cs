@@ -16,7 +16,7 @@ public interface ITwitterFilteredStreamService
     /// <returns>
     /// Return <c>HttpResult</c>
     /// </returns>
-    Task<HttpResult> AddRule(TwitterFilteredStreamRuleActions action,
+    Task<HttpResult> ModifyRule(TwitterFilteredStreamRuleActions action,
         bool dryRun,
         TwitterFilteredStreamRule[] rules);
 }

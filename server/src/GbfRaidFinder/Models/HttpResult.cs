@@ -1,9 +1,12 @@
-using System.Collections.ObjectModel;
-
 namespace GbfRaidFinder.Models;
 
 public class HttpResult
 {
     public bool IsSuccess { get; set; }
-    public Collection<string>? ErrorDesc { get; set; }
+    public dynamic? ErrorDesc { get; set; }
+
+    public HttpResult(bool isSuccess)
+    {
+        IsSuccess = isSuccess;
+    }
 }

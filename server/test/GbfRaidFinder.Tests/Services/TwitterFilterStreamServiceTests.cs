@@ -1,10 +1,11 @@
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
+using GbfRaidFinder.Models;
 using GbfRaidFinder.Models.Enums;
 using GbfRaidFinder.Models.Settings;
 using GbfRaidFinder.Services;
+using GbfRaidFinder.Tests.Utils;
 using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
@@ -17,15 +18,9 @@ public class TwitterFilteredStreamServiceTests
     public async Task AddRule_NewValidRule_ReturnValid()
     {
         // Arrange
-        HttpResponseMessage response = new()
-        {
-            StatusCode = HttpStatusCode.OK,
-            Content = new StringContent("{\"a\": \"a\"}")
-        };
-        Mock<HttpClient> httpClient = new();
-        httpClient.Setup(_ => _.SendAsync(It.IsAny<HttpRequestMessage>())).ReturnsAsync(response);
+        var httpClient = MockUtils.MockHttpClient("{\"a\": \"a\"}");
         Mock<IHttpClientFactory> httpClientFactory = new();
-        httpClientFactory.Setup(f => f.CreateClient()).Returns(httpClient.Object);
+        httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
         var keysOption = Options.Create(new Keys { TwitterJwtToken = "test" });
         var urlsOption = Options.Create(new Urls { TwitterFilteredStreamRules = "test" });
@@ -34,8 +29,10 @@ public class TwitterFilteredStreamServiceTests
             httpClientFactory.Object, keysOption, urlsOption);
 
         // Act
-        var result = await twitterFilteredStreamService.AddRule(
-            TwitterFilteredStreamRuleActions.Add, true, "");
+        var result = await twitterFilteredStreamService.ModifyRule(
+            TwitterFilteredStreamRuleActions.Add,
+            true,
+            new TwitterFilteredStreamRule[] { new("a") });
 
         // Assert
         result.IsSuccess.Should().BeTrue();
