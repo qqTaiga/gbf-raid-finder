@@ -31,14 +31,14 @@ public class TwitterFilteredStreamService : ITwitterFilteredStreamService
         {
             content = JsonContent.Create(new
             {
-                add = new { add = rules }
+                add = rules
             });
         }
         else if (action == TwitterFilteredStreamRuleActions.Delete)
         {
             content = JsonContent.Create(new
             {
-                delete = new { delete = rules }
+                delete = rules
             });
         }
         if (content != null)
@@ -47,13 +47,18 @@ public class TwitterFilteredStreamService : ITwitterFilteredStreamService
                 new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
         }
 
+        var url = _urls.TwitterFilteredStreamRule;
+        if (dryRun)
+        {
+            url += "?dry_run=true";
+        }
         var request = new HttpRequestMessage(
             HttpMethod.Post,
-            _urls.TwitterFilteredStreamRules)
+            url)
         {
             Headers =
             {
-                { HeaderNames.Authorization, "Bearer" + _keys.TwitterJwtToken }
+                { HeaderNames.Authorization, "Bearer " + _keys.TwitterJwtToken }
             },
             Content = content
         };
@@ -70,7 +75,7 @@ public class TwitterFilteredStreamService : ITwitterFilteredStreamService
             var contentStream = await response.Content.ReadAsStreamAsync();
             HttpResult result = new(false)
             {
-                ErrorDesc = await JsonSerializer.Deserialize<dynamic>(contentStream)
+                ErrorDesc = await JsonSerializer.DeserializeAsync<dynamic>(contentStream)
             };
             return result;
         }

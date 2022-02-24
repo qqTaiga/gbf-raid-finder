@@ -23,7 +23,7 @@ public class TwitterFilteredStreamServiceTests
         httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
         var keysOption = Options.Create(new Keys { TwitterJwtToken = "test" });
-        var urlsOption = Options.Create(new Urls { TwitterFilteredStreamRules = "test" });
+        var urlsOption = Options.Create(new Urls { TwitterFilteredStreamRule = "test" });
 
         TwitterFilteredStreamService twitterFilteredStreamService = new(
             httpClientFactory.Object, keysOption, urlsOption);

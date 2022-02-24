@@ -5,4 +5,5 @@ namespace GbfRaidFinder.Models.Dtos;
 
 public record TwitterFilteredStreamRuleDto(
     [Required] TwitterFilteredStreamRuleActions Action,
-    TwitterFilteredStreamRule[] rules);
+    [Required] bool DryRun,
+    TwitterFilteredStreamRule[] Rules);
