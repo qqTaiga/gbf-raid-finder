@@ -23,7 +23,7 @@ public static class MockUtils
         var mockMessageHandler = new Mock<HttpMessageHandler>();
         mockMessageHandler.Protected()
             .Setup<Task<HttpResponseMessage>>(
-                "SendAsync",
+                nameof(HttpClient.SendAsync),
                 ItExpr.IsAny<HttpRequestMessage>(),
                 ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(new HttpResponseMessage
