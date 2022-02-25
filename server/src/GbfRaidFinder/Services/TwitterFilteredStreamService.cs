@@ -22,7 +22,7 @@ public class TwitterFilteredStreamService : ITwitterFilteredStreamService
         _urls = urls.Value;
     }
 
-    public async Task<HttpResult> ModifyRule(TwitterFilteredStreamRuleActions action,
+    public async Task<HttpResult> ModifyRules(TwitterFilteredStreamRuleActions action,
             bool dryRun,
             TwitterFilteredStreamRule[] rules)
     {
@@ -69,6 +69,41 @@ public class TwitterFilteredStreamService : ITwitterFilteredStreamService
         if (response.IsSuccessStatusCode)
         {
             return new HttpResult(true);
+        }
+        else
+        {
+            var contentStream = await response.Content.ReadAsStreamAsync();
+            HttpResult result = new(false)
+            {
+                ErrorDesc = await JsonSerializer.DeserializeAsync<dynamic>(contentStream)
+            };
+            return result;
+        }
+    }
+
+    public async Task<HttpResult> RetrieveRules()
+    {
+        var url = _urls.TwitterFilteredStreamRule;
+        var request = new HttpRequestMessage(
+            HttpMethod.Get,
+            url)
+        {
+            Headers =
+            {
+                { HeaderNames.Authorization, "Bearer " + _keys.TwitterJwtToken }
+            },
+        };
+        var httpClient = _httpClientFactory.CreateClient();
+        var response = await httpClient.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var contentStream = await response.Content.ReadAsStreamAsync();
+            HttpResult result = new(true)
+            {
+                Content = await JsonSerializer.DeserializeAsync<dynamic>(contentStream)
+            };
+            return result;
         }
         else
         {

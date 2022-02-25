@@ -10,7 +10,15 @@ namespace GbfRaidFinder.Tests.Utils;
 
 public static class MockUtils
 {
-    public static HttpClient MockHttpClient(string returnContent)
+    /// <summary>
+    /// Create a mocked <c>HttpClient</c>, returned content and status code are based on parameter.
+    /// </summary>
+    /// <param name="returnContent">Content that need to return by <c>HttpClient</c></param>
+    /// <param name="statusCode">Content that need to return by <c>HttpClient</c></param>
+    /// <returns>
+    /// Mocked <c>HttpClient</c>
+    /// </returns>
+    public static HttpClient MockHttpClient(string returnContent, HttpStatusCode statusCode)
     {
         var mockMessageHandler = new Mock<HttpMessageHandler>();
         mockMessageHandler.Protected()
@@ -20,7 +28,7 @@ public static class MockUtils
                 ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(new HttpResponseMessage
             {
-                StatusCode = HttpStatusCode.OK,
+                StatusCode = statusCode,
                 Content = new StringContent(returnContent)
             });
         HttpClient httpClient = new(mockMessageHandler.Object);

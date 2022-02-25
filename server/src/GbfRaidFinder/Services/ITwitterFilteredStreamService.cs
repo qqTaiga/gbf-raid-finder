@@ -16,7 +16,17 @@ public interface ITwitterFilteredStreamService
     /// <returns>
     /// Return <c>HttpResult</c>
     /// </returns>
-    Task<HttpResult> ModifyRule(TwitterFilteredStreamRuleActions action,
+    Task<HttpResult> ModifyRules(TwitterFilteredStreamRuleActions action,
         bool dryRun,
         TwitterFilteredStreamRule[] rules);
+
+    /// <summary>
+    /// Retrieve Twitter filtered stream rules.
+    /// set <paramref name="dryRun"/> to true to test a the syntax of rules without submitting it.
+    /// </summary>
+    /// <param name="rules">Rules</param>
+    /// <returns>
+    /// Return <c>HttpResult</c> with rules in Content.  
+    /// </returns>
+    Task<HttpResult> RetrieveRules();
 }
