@@ -16,7 +16,7 @@ public interface ITwitterFilteredStreamService
     /// <returns>
     /// Return <c>HttpResult</c>
     /// </returns>
-    Task<HttpResult> ModifyRules(TwitterFilteredStreamRuleActions action,
+    Task<HttpResult> ModifyRulesAsync(TwitterFilteredStreamRuleActions action,
         bool dryRun,
         TwitterFilteredStreamRule[] rules);
 
@@ -28,5 +28,16 @@ public interface ITwitterFilteredStreamService
     /// <returns>
     /// Return <c>HttpResult</c> with rules in Content.  
     /// </returns>
-    Task<HttpResult> RetrieveRules();
+    Task<HttpResult> RetrieveRulesAsync();
+
+    /// <summary>
+    /// Connect to Twitter Filtered stream Api and convert to <c>GbfHelpTweet</c>
+    /// </summary>
+    /// <returns>
+    /// Return list of <c>GbfHelpTweet</c> async
+    /// </returns>
+    /// <exception cref="HttpRequestException">
+    /// Failed to open connection with Twitter filtered stream api
+    /// </exception>
+    IAsyncEnumerable<GbfHelpTweet> ConnectStreamAsync();
 }

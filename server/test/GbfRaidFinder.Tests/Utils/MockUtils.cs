@@ -14,11 +14,11 @@ public static class MockUtils
     /// Create a mocked <c>HttpClient</c>, returned content and status code are based on parameter.
     /// </summary>
     /// <param name="returnContent">Content that need to return by <c>HttpClient</c></param>
-    /// <param name="statusCode">Content that need to return by <c>HttpClient</c></param>
+    /// <param name="statusCode">Status code that need to return by <c>HttpClient</c></param>
     /// <returns>
     /// Mocked <c>HttpClient</c>
     /// </returns>
-    public static HttpClient MockHttpClient(string returnContent, HttpStatusCode statusCode)
+    public static HttpClient MockHttpClient(HttpStatusCode statusCode, HttpContent content)
     {
         var mockMessageHandler = new Mock<HttpMessageHandler>();
         mockMessageHandler.Protected()
@@ -29,7 +29,7 @@ public static class MockUtils
             .ReturnsAsync(new HttpResponseMessage
             {
                 StatusCode = statusCode,
-                Content = new StringContent(returnContent)
+                Content = content
             });
         HttpClient httpClient = new(mockMessageHandler.Object);
         httpClient.BaseAddress = new Uri("http://localhost");

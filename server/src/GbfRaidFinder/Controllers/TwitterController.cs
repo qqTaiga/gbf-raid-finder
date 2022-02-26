@@ -27,7 +27,7 @@ public class TwitterController : ControllerBase
     [HttpPost("filtered-stream/rules/modify")]
     public async Task<IActionResult> ModifyRules(TwitterFilteredStreamRuleDto input)
     {
-        HttpResult result = await _twitterFSService.ModifyRules(
+        HttpResult result = await _twitterFSService.ModifyRulesAsync(
             input.Action,
             input.DryRun,
             input.Rules);
@@ -50,7 +50,7 @@ public class TwitterController : ControllerBase
     [HttpGet("filtered-stream/rules")]
     public async Task<IActionResult> RetrieveRules()
     {
-        HttpResult result = await _twitterFSService.RetrieveRules();
+        HttpResult result = await _twitterFSService.RetrieveRulesAsync();
         if (result.IsSuccess)
         {
             return Ok(result.Content);

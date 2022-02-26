@@ -22,7 +22,7 @@ public class TwitterFilteredStreamService : ITwitterFilteredStreamService
         _urls = urls.Value;
     }
 
-    public async Task<HttpResult> ModifyRules(TwitterFilteredStreamRuleActions action,
+    public async Task<HttpResult> ModifyRulesAsync(TwitterFilteredStreamRuleActions action,
             bool dryRun,
             TwitterFilteredStreamRule[] rules)
     {
@@ -81,12 +81,10 @@ public class TwitterFilteredStreamService : ITwitterFilteredStreamService
         }
     }
 
-    public async Task<HttpResult> RetrieveRules()
+    public async Task<HttpResult> RetrieveRulesAsync()
     {
         var url = _urls.TwitterFilteredStreamRule;
-        var request = new HttpRequestMessage(
-            HttpMethod.Get,
-            url)
+        var request = new HttpRequestMessage(HttpMethod.Get, url)
         {
             Headers =
             {
@@ -114,6 +112,61 @@ public class TwitterFilteredStreamService : ITwitterFilteredStreamService
             };
             return result;
         }
+    }
+
+    public async IAsyncEnumerable<GbfHelpTweet> ConnectStreamAsync()
+    {
+        var url = _urls.TwitterFilteredStream;
+        // Retrieve created at and media key fields
+        url += "?tweet.fields=created_at&expansions=attachments.media_keys";
+        var request = new HttpRequestMessage(HttpMethod.Get, url)
+        {
+            Headers =
+            {
+                { HeaderNames.Authorization, "Bearer " + _keys.TwitterJwtToken }
+            },
+        };
+        var httpClient = _httpClientFactory.CreateClient();
+        httpClient.Timeout = TimeSpan.FromMilliseconds(Timeout.Infinite);
+        var response = await httpClient.SendAsync(
+            request,
+            HttpCompletionOption.ResponseHeadersRead);
+        if (response.IsSuccessStatusCode)
+        {
+            var contentStream = await response.Content.ReadAsStreamAsync();
+            using (var reader = new StreamReader(contentStream))
+            {
+                while (!reader.EndOfStream)
+                {
+                    var line = reader.ReadLine();
+                    if (line == null)
+                        continue;
+
+                    var tweet = JsonSerializer.Deserialize<JsonElement>(line);
+                    GbfHelpTweet? gbfTweet = null;
+                    try
+                    {
+                        gbfTweet = tweet.GetProperty("data").Deserialize<GbfHelpTweet>(
+                            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    }
+                    catch (KeyNotFoundException ex)
+                    {
+                        // TODO: change to serilog
+                        Console.WriteLine(ex.Message);
+                        continue;
+                    }
+
+                    if (gbfTweet?.Text != null)
+                        yield return gbfTweet;
+                }
+                // TODO: log connection end and last line
+            }
+        }
+        else
+        {
+            throw new HttpRequestException(response.StatusCode.ToString());
+        }
+
     }
 }
 
