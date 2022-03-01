@@ -9,6 +9,7 @@ using GbfRaidFinder.Models.Enums;
 using GbfRaidFinder.Models.Settings;
 using GbfRaidFinder.Services;
 using GbfRaidFinder.Tests.Utils;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
@@ -27,11 +28,13 @@ public class TwitterFilteredStreamServiceTests
         Mock<IHttpClientFactory> httpClientFactory = new();
         httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
+        var log = new NullLogger<TwitterFilteredStreamService>();
+
         var keysOption = Options.Create(new Keys { TwitterJwtToken = "test" });
         var urlsOption = Options.Create(new Urls { TwitterFilteredStreamRule = "test" });
 
         TwitterFilteredStreamService twitterFilteredStreamService = new(
-            httpClientFactory.Object, keysOption, urlsOption);
+            httpClientFactory.Object, log, keysOption, urlsOption);
 
         // Act
         var result = await twitterFilteredStreamService.ModifyRulesAsync(
@@ -53,11 +56,13 @@ public class TwitterFilteredStreamServiceTests
         Mock<IHttpClientFactory> httpClientFactory = new();
         httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
+        var log = new NullLogger<TwitterFilteredStreamService>();
+
         var keysOption = Options.Create(new Keys { TwitterJwtToken = "test" });
         var urlsOption = Options.Create(new Urls { TwitterFilteredStreamRule = "test" });
 
         TwitterFilteredStreamService twitterFilteredStreamService = new(
-            httpClientFactory.Object, keysOption, urlsOption);
+            httpClientFactory.Object, log, keysOption, urlsOption);
 
         // Act
         var result = await twitterFilteredStreamService.RetrieveRulesAsync();
@@ -80,11 +85,13 @@ public class TwitterFilteredStreamServiceTests
         Mock<IHttpClientFactory> httpClientFactory = new();
         httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
+        var log = new NullLogger<TwitterFilteredStreamService>();
+
         var keysOption = Options.Create(new Keys { TwitterJwtToken = "test" });
         var urlsOption = Options.Create(new Urls { TwitterFilteredStreamRule = "test" });
 
         TwitterFilteredStreamService twitterFilteredStreamService = new(
-            httpClientFactory.Object, keysOption, urlsOption);
+            httpClientFactory.Object, log, keysOption, urlsOption);
 
         // Act
         var result = twitterFilteredStreamService.ConnectStreamAsync();
@@ -109,11 +116,13 @@ public class TwitterFilteredStreamServiceTests
         Mock<IHttpClientFactory> httpClientFactory = new();
         httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
+        var log = new NullLogger<TwitterFilteredStreamService>();
+
         var keysOption = Options.Create(new Keys { TwitterJwtToken = "test" });
         var urlsOption = Options.Create(new Urls { TwitterFilteredStreamRule = "test" });
 
         TwitterFilteredStreamService twitterFilteredStreamService = new(
-            httpClientFactory.Object, keysOption, urlsOption);
+            httpClientFactory.Object, log, keysOption, urlsOption);
 
         // Act
         Func<Task> action = async ()

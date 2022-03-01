@@ -10,14 +10,17 @@ namespace GbfRaidFinder.Services;
 public class TwitterFilteredStreamService : ITwitterFilteredStreamService
 {
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly ILogger<TwitterFilteredStreamService> _log;
     private readonly Keys _keys;
     private readonly Urls _urls;
 
     public TwitterFilteredStreamService(IHttpClientFactory httpClientFactory,
+        ILogger<TwitterFilteredStreamService> log,
         IOptions<Keys> keys,
         IOptions<Urls> urls)
     {
         _httpClientFactory = httpClientFactory;
+        _log = log;
         _keys = keys.Value;
         _urls = urls.Value;
     }
@@ -131,40 +134,37 @@ public class TwitterFilteredStreamService : ITwitterFilteredStreamService
         var response = await httpClient.SendAsync(
             request,
             HttpCompletionOption.ResponseHeadersRead);
-        if (response.IsSuccessStatusCode)
-        {
-            var contentStream = await response.Content.ReadAsStreamAsync();
-            using (var reader = new StreamReader(contentStream))
-            {
-                while (!reader.EndOfStream)
-                {
-                    var line = reader.ReadLine();
-                    if (line == null)
-                        continue;
 
-                    var tweet = JsonSerializer.Deserialize<JsonElement>(line);
-                    GbfHelpTweet? gbfTweet = null;
-                    try
-                    {
-                        gbfTweet = tweet.GetProperty("data").Deserialize<GbfHelpTweet>(
-                            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                    }
-                    catch (KeyNotFoundException ex)
-                    {
-                        // TODO: change to serilog
-                        Console.WriteLine(ex.Message);
-                        continue;
-                    }
-
-                    if (gbfTweet?.Text != null)
-                        yield return gbfTweet;
-                }
-                // TODO: log connection end and last line
-            }
-        }
-        else
-        {
+        if (!response.IsSuccessStatusCode)
             throw new HttpRequestException(response.StatusCode.ToString());
+
+        var contentStream = await response.Content.ReadAsStreamAsync();
+        using (var reader = new StreamReader(contentStream))
+        {
+            string? line = null;
+            while (!reader.EndOfStream)
+            {
+                line = reader.ReadLine();
+                if (line == null)
+                    continue;
+
+                var tweet = JsonSerializer.Deserialize<JsonElement>(line);
+                GbfHelpTweet? gbfTweet = null;
+                try
+                {
+                    gbfTweet = tweet.GetProperty("data").Deserialize<GbfHelpTweet>(
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                }
+                catch (KeyNotFoundException)
+                {
+                    _log.LogWarning("Twitter text => " + line);
+                    continue;
+                }
+
+                if (gbfTweet?.Text != null)
+                    yield return gbfTweet;
+            }
+            _log.LogWarning("connection closed => " + line);
         }
 
     }
