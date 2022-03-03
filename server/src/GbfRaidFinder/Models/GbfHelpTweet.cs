@@ -4,20 +4,13 @@ namespace GbfRaidFinder.Models;
 
 public class GbfHelpTweet
 {
-    public GbfHelpTweetExpansion Includes { init; get; }
-    public string Created_at { get; init; }
-    public string Id { get; init; }
-    public string Text { get; init; }
+    public GbfHelpTweetData Data { get; init; }
+    public GbfHelpTweetExpansion Includes { get; init; }
 
     [JsonConstructor]
-    public GbfHelpTweet(GbfHelpTweetExpansion includes,
-        string created_at,
-        string id,
-        string text)
+    public GbfHelpTweet(GbfHelpTweetData data, GbfHelpTweetExpansion includes)
     {
+        Data = data;
         Includes = includes;
-        Created_at = created_at;
-        Id = id;
-        Text = text;
     }
 }

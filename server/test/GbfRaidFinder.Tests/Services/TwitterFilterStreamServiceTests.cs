@@ -98,16 +98,19 @@ public class TwitterFilteredStreamServiceTests
         var result = twitterFilteredStreamService.ConnectStreamAsync();
 
         // Assert
-        await foreach (var tweet in result)
+        var list = await result.ToListAsync();
+        list.Should().NotBeEmpty();
+        list.Count.Should().Be(3);
+        foreach (var tweet in list)
         {
             tweet.Should().NotBeNull();
-            tweet.Created_at.Should().Be("2022-03-03T16:08:11.000Z");
-            tweet.Id.Should().Be("1499416354302021635");
-            tweet.Text.Should().Be(
-                "A6806FCC :参戦ID\\n参加者募集！\\nLv100 ウリエル\\nhttps://t.co/GGyX19yYAG");
+            tweet.Data.Created_at.Should().Be("2022-03-03T16:08:11.000Z");
+            tweet.Data.Id.Should().Be("1499416354302021635");
+            tweet.Data.Text.Should().Be(
+                "A6806FCC :参戦ID\n参加者募集！\nLv100 ウリエル\nhttps://t.co/GGyX19yYAG");
 
             tweet?.Includes.Media.Length.Should().Be(1);
-            tweet?.Includes.Media[0]?.Media_Keys.Should().Be("3_841815632207212544");
+            tweet?.Includes.Media[0]?.Media_Key.Should().Be("3_841815632207212544");
             tweet?.Includes.Media[0]?.Type.Should().Be("photo");
             tweet?.Includes.Media[0]?.Url.Should().Be(
                 "https://pbs.twimg.com/media/C66623wU8AACyL2.jpg");

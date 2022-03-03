@@ -4,7 +4,7 @@ namespace GbfRaidFinder.Models;
 
 public class GbfHelpTweetExpansion
 {
-    public GbfHelpTweetMedia[] Media;
+    public GbfHelpTweetMedia[] Media { get; init; }
 
     [JsonConstructor]
     public GbfHelpTweetExpansion(GbfHelpTweetMedia[] media)
