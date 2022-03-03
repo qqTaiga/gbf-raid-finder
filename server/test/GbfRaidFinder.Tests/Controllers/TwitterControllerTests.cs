@@ -20,18 +20,20 @@ public class TwitterControllerTests
         TwitterFilteredStreamRuleDto input = new(
             TwitterFilteredStreamRuleActions.Add,
             true,
-            new TwitterFilteredStreamRule[] { new("test") }
+            new TwitterFilteredStreamRule[] { new("test") },
+            new string[] { }
         );
         Mock<ITwitterFilteredStreamService> twitterFSServiceMock = new();
         twitterFSServiceMock.Setup(_ => _.ModifyRulesAsync(
             It.IsAny<TwitterFilteredStreamRuleActions>(),
             It.IsAny<bool>(),
-            It.IsAny<TwitterFilteredStreamRule[]>()))
+            It.IsAny<TwitterFilteredStreamRule[]>(),
+            It.IsAny<string[]>()))
                 .ReturnsAsync(new HttpResult(true));
         TwitterController controller = new(twitterFSServiceMock.Object);
 
         // Act
-        var result = await controller.ModifyRules(input) as OkResult;
+        var result = await controller.ModifyRules(input) as OkObjectResult;
 
         // Assert
         result.Should().NotBeNull();
@@ -45,13 +47,15 @@ public class TwitterControllerTests
         TwitterFilteredStreamRuleDto input = new(
             TwitterFilteredStreamRuleActions.Add,
             true,
-            new TwitterFilteredStreamRule[] { new("test") }
+            new TwitterFilteredStreamRule[] { new("test") },
+            new string[] { }
         );
         Mock<ITwitterFilteredStreamService> twitterFSServiceMock = new();
         twitterFSServiceMock.Setup(_ => _.ModifyRulesAsync(
             It.IsAny<TwitterFilteredStreamRuleActions>(),
             It.IsAny<bool>(),
-            It.IsAny<TwitterFilteredStreamRule[]>()))
+            It.IsAny<TwitterFilteredStreamRule[]>(),
+            It.IsAny<string[]>()))
                 .ReturnsAsync(new HttpResult(false) { ErrorDesc = new { Error = "Error" } });
         TwitterController controller = new(twitterFSServiceMock.Object);
 

@@ -40,7 +40,8 @@ public class TwitterFilteredStreamServiceTests
         var result = await twitterFilteredStreamService.ModifyRulesAsync(
             TwitterFilteredStreamRuleActions.Add,
             true,
-            new TwitterFilteredStreamRule[] { new("a") });
+            new TwitterFilteredStreamRule[] { new("a") },
+            new string[] { });
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -76,11 +77,11 @@ public class TwitterFilteredStreamServiceTests
     {
         // Arrange
         string returnText =
-            "{\"data\":{\"attachments\":{\"media_keys\":[\"3_707901161920028674\"]},\"created_at\":\"2022-02-25T16:48:52.000Z\",\"id\":\"1497252266176577543\",\"text\":\"4/30 10F8A733 :参戦ID\\n参加者募集！\\nLv150 プロトバハムート\\nhttps://t.co/C53UwBpmJ8\"},\"includes\":{\"media\":[{\"media_key\":\"3_707901161920028674\",\"type\":\"photo\"}]},\"matching_rules\":[{\"id\":\"1496876690072825856\",\"tag\":\"gbf help twitter post\"}]}" +
+            "{\"data\":{\"attachments\":{\"media_keys\":[\"3_841815632207212544\"]},\"created_at\":\"2022-03-03T16:08:11.000Z\",\"id\":\"1499416354302021635\",\"text\":\"A6806FCC :参戦ID\\n参加者募集！\\nLv100 ウリエル\\nhttps://t.co/GGyX19yYAG\"},\"includes\":{\"media\":[{\"media_key\":\"3_841815632207212544\",\"type\":\"photo\",\"url\":\"https://pbs.twimg.com/media/C66623wU8AACyL2.jpg\"}]},\"matching_rules\":[{\"id\":\"1499410123726340098\",\"tag\":\"gbf raid\"}]}" +
             "\n" +
-            "{\"data\":{\"attachments\":{\"media_keys\":[\"3_707901161920028674\"]},\"created_at\":\"2022-02-25T16:48:52.000Z\",\"id\":\"1497252266176577543\",\"text\":\"4/30 10F8A733 :参戦ID\\n参加者募集！\\nLv150 プロトバハムート\\nhttps://t.co/C53UwBpmJ8\"},\"includes\":{\"media\":[{\"media_key\":\"3_707901161920028674\",\"type\":\"photo\"}]},\"matching_rules\":[{\"id\":\"1496876690072825856\",\"tag\":\"gbf help twitter post\"}]}" +
+            "{\"data\":{\"attachments\":{\"media_keys\":[\"3_841815632207212544\"]},\"created_at\":\"2022-03-03T16:08:11.000Z\",\"id\":\"1499416354302021635\",\"text\":\"A6806FCC :参戦ID\\n参加者募集！\\nLv100 ウリエル\\nhttps://t.co/GGyX19yYAG\"},\"includes\":{\"media\":[{\"media_key\":\"3_841815632207212544\",\"type\":\"photo\",\"url\":\"https://pbs.twimg.com/media/C66623wU8AACyL2.jpg\"}]},\"matching_rules\":[{\"id\":\"1499410123726340098\",\"tag\":\"gbf raid\"}]}" +
             "\n" +
-            "{\"data\":{\"attachments\":{\"media_keys\":[\"3_707901161920028674\"]},\"created_at\":\"2022-02-25T16:48:52.000Z\",\"id\":\"1497252266176577543\",\"text\":\"4/30 10F8A733 :参戦ID\\n参加者募集！\\nLv150 プロトバハムート\\nhttps://t.co/C53UwBpmJ8\"},\"includes\":{\"media\":[{\"media_key\":\"3_707901161920028674\",\"type\":\"photo\"}]},\"matching_rules\":[{\"id\":\"1496876690072825856\",\"tag\":\"gbf help twitter post\"}]}";
+            "{\"data\":{\"attachments\":{\"media_keys\":[\"3_841815632207212544\"]},\"created_at\":\"2022-03-03T16:08:11.000Z\",\"id\":\"1499416354302021635\",\"text\":\"A6806FCC :参戦ID\\n参加者募集！\\nLv100 ウリエル\\nhttps://t.co/GGyX19yYAG\"},\"includes\":{\"media\":[{\"media_key\":\"3_841815632207212544\",\"type\":\"photo\",\"url\":\"https://pbs.twimg.com/media/C66623wU8AACyL2.jpg\"}]},\"matching_rules\":[{\"id\":\"1499410123726340098\",\"tag\":\"gbf raid\"}]}";
         var httpClient = MockUtils.MockHttpClient(HttpStatusCode.OK, new StringContent(returnText));
         Mock<IHttpClientFactory> httpClientFactory = new();
         httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
@@ -100,7 +101,16 @@ public class TwitterFilteredStreamServiceTests
         await foreach (var tweet in result)
         {
             tweet.Should().NotBeNull();
-            tweet?.Text.Should().NotBeNull();
+            tweet.Created_at.Should().Be("2022-03-03T16:08:11.000Z");
+            tweet.Id.Should().Be("1499416354302021635");
+            tweet.Text.Should().Be(
+                "A6806FCC :参戦ID\\n参加者募集！\\nLv100 ウリエル\\nhttps://t.co/GGyX19yYAG");
+
+            tweet?.Includes.Media.Length.Should().Be(1);
+            tweet?.Includes.Media[0]?.Media_Keys.Should().Be("3_841815632207212544");
+            tweet?.Includes.Media[0]?.Type.Should().Be("photo");
+            tweet?.Includes.Media[0]?.Url.Should().Be(
+                "https://pbs.twimg.com/media/C66623wU8AACyL2.jpg");
         }
     }
 

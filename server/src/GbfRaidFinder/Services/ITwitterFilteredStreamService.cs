@@ -18,7 +18,8 @@ public interface ITwitterFilteredStreamService
     /// </returns>
     Task<HttpResult> ModifyRulesAsync(TwitterFilteredStreamRuleActions action,
         bool dryRun,
-        TwitterFilteredStreamRule[] rules);
+        TwitterFilteredStreamRule[]? rules,
+        string[]? ids);
 
     /// <summary>
     /// Retrieve Twitter filtered stream rules.

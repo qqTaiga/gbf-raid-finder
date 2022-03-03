@@ -27,7 +27,8 @@ public class TwitterFilteredStreamService : ITwitterFilteredStreamService
 
     public async Task<HttpResult> ModifyRulesAsync(TwitterFilteredStreamRuleActions action,
             bool dryRun,
-            TwitterFilteredStreamRule[] rules)
+            TwitterFilteredStreamRule[]? rules,
+            string[]? ids)
     {
         JsonContent? content = null;
         if (action == TwitterFilteredStreamRuleActions.Add)
@@ -39,9 +40,10 @@ public class TwitterFilteredStreamService : ITwitterFilteredStreamService
         }
         else if (action == TwitterFilteredStreamRuleActions.Delete)
         {
+            var idsParam = new { ids = ids };
             content = JsonContent.Create(new
             {
-                delete = rules
+                delete = idsParam
             });
         }
         if (content != null)
@@ -68,14 +70,18 @@ public class TwitterFilteredStreamService : ITwitterFilteredStreamService
 
         var httpClient = _httpClientFactory.CreateClient();
         var response = await httpClient.SendAsync(request);
+        var contentStream = await response.Content.ReadAsStreamAsync();
 
         if (response.IsSuccessStatusCode)
         {
-            return new HttpResult(true);
+            HttpResult result = new(true)
+            {
+                Content = await JsonSerializer.DeserializeAsync<dynamic>(contentStream)
+            };
+            return result;
         }
         else
         {
-            var contentStream = await response.Content.ReadAsStreamAsync();
             HttpResult result = new(false)
             {
                 ErrorDesc = await JsonSerializer.DeserializeAsync<dynamic>(contentStream)
@@ -121,7 +127,7 @@ public class TwitterFilteredStreamService : ITwitterFilteredStreamService
     {
         var url = _urls.TwitterFilteredStream;
         // Retrieve created at and media key fields
-        url += "?tweet.fields=created_at&expansions=attachments.media_keys";
+        url += "?tweet.fields=created_at&media.fields=url&expansions=attachments.media_keys";
         var request = new HttpRequestMessage(HttpMethod.Get, url)
         {
             Headers =
@@ -148,21 +154,10 @@ public class TwitterFilteredStreamService : ITwitterFilteredStreamService
                 if (line == null)
                     continue;
 
-                var tweet = JsonSerializer.Deserialize<JsonElement>(line);
-                GbfHelpTweet? gbfTweet = null;
-                try
-                {
-                    gbfTweet = tweet.GetProperty("data").Deserialize<GbfHelpTweet>(
-                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                }
-                catch (KeyNotFoundException)
-                {
-                    _log.LogWarning("Twitter text => " + line);
-                    continue;
-                }
+                var tweet = JsonSerializer.Deserialize<GbfHelpTweet>(line);
 
-                if (gbfTweet?.Text != null)
-                    yield return gbfTweet;
+                if (tweet?.Text != null)
+                    yield return tweet;
             }
             _log.LogWarning("connection closed => " + line);
         }

@@ -20,7 +20,7 @@ public class TwitterController : ControllerBase
     /// Modify Twitter Filtered Stream Rule (add/delete).
     /// If dryRun set to true to test syntax wihout modify current rules.
     /// </summary>
-    /// <param name="input">Action, DryRun, and Rules</param>
+    /// <param name="input">Action, DryRun, Rules, Ids</param>
     /// <response code="200">Success modified the rules</response>
     /// <response code="400">Missing required input</response>
     /// <response code="429">Invalid rules or syntax</response>
@@ -30,11 +30,12 @@ public class TwitterController : ControllerBase
         HttpResult result = await _twitterFSService.ModifyRulesAsync(
             input.Action,
             input.DryRun,
-            input.Rules);
+            input.Rules,
+            input.Ids);
 
         if (result.IsSuccess)
         {
-            return Ok();
+            return Ok(result.Content);
         }
         else
         {
