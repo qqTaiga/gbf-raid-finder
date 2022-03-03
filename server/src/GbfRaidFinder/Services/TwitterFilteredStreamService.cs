@@ -157,7 +157,7 @@ public class TwitterFilteredStreamService : ITwitterFilteredStreamService
                 var tweet = JsonSerializer.Deserialize<GbfHelpTweet>(line,
                     new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-                if (tweet?.Data != null && tweet?.Includes != null)
+                if (tweet?.Data != null && tweet?.Includes?.Media != null)
                     yield return tweet;
             }
             _log.LogWarning("connection closed => " + line);
