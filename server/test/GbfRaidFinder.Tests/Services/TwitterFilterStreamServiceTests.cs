@@ -104,7 +104,7 @@ public class TwitterFilteredStreamServiceTests
         foreach (var tweet in list)
         {
             tweet.Should().NotBeNull();
-            tweet.Data.Created_at.Should().Be("2022-03-03T16:08:11.000Z");
+            tweet.Data.Created_At.Should().Be("2022-03-03T16:08:11.000Z");
             tweet.Data.Id.Should().Be("1499416354302021635");
             tweet.Data.Text.Should().Be(
                 "A6806FCC :参戦ID\n参加者募集！\nLv100 ウリエル\nhttps://t.co/GGyX19yYAG");
