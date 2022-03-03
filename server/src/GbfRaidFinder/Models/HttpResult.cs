@@ -2,9 +2,9 @@ namespace GbfRaidFinder.Models;
 
 public class HttpResult
 {
-    public bool IsSuccess { get; set; }
-    public dynamic? Content { get; set; }
-    public dynamic? ErrorDesc { get; set; }
+    public bool IsSuccess { get; init; }
+    public dynamic? Content { get; init; }
+    public dynamic? ErrorDesc { get; init; }
 
     public HttpResult(bool isSuccess)
     {

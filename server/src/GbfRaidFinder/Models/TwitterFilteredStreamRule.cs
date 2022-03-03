@@ -4,8 +4,8 @@ namespace GbfRaidFinder.Models;
 
 public class TwitterFilteredStreamRule
 {
-    public string Value { get; set; }
-    public string? Tag { get; set; }
+    public string Value { get; init; }
+    public string? Tag { get; init; }
 
 
     public TwitterFilteredStreamRule(string value)
