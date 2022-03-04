@@ -9,5 +9,6 @@ public interface IGbfRaidService
     /// </summary>
     /// <param name="tweet">GbfHelpTweet get from stream</param>
     /// <returns>GbfHelpRequest</returns>
+    /// <exception cref="ArgumentException">Missing or invalid value</exception>
     public GbfHelpRequest ConvertGbfHelpTweetToRequest(GbfHelpTweet tweet);
 }
