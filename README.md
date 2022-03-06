@@ -1,1 +1,1 @@
-# gbf-raid-finder
+# gbf-raid-finder (WIP)
