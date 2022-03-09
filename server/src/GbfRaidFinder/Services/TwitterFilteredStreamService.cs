@@ -57,7 +57,7 @@ public class TwitterFilteredStreamService : ITwitterFilteredStreamService
         {
             url += "?dry_run=true";
         }
-        var request = new HttpRequestMessage(
+        using var request = new HttpRequestMessage(
             HttpMethod.Post,
             url)
         {
@@ -69,8 +69,8 @@ public class TwitterFilteredStreamService : ITwitterFilteredStreamService
         };
 
         var httpClient = _httpClientFactory.CreateClient();
-        var response = await httpClient.SendAsync(request);
-        var contentStream = await response.Content.ReadAsStreamAsync();
+        using var response = await httpClient.SendAsync(request);
+        using var contentStream = await response.Content.ReadAsStreamAsync();
 
         if (response.IsSuccessStatusCode)
         {
@@ -93,7 +93,7 @@ public class TwitterFilteredStreamService : ITwitterFilteredStreamService
     public async Task<HttpResult> RetrieveRulesAsync()
     {
         var url = _urls.TwitterFilteredStreamRule;
-        var request = new HttpRequestMessage(HttpMethod.Get, url)
+        using var request = new HttpRequestMessage(HttpMethod.Get, url)
         {
             Headers =
             {
@@ -101,11 +101,11 @@ public class TwitterFilteredStreamService : ITwitterFilteredStreamService
             },
         };
         var httpClient = _httpClientFactory.CreateClient();
-        var response = await httpClient.SendAsync(request);
+        using var response = await httpClient.SendAsync(request);
+        using var contentStream = await response.Content.ReadAsStreamAsync();
 
         if (response.IsSuccessStatusCode)
         {
-            var contentStream = await response.Content.ReadAsStreamAsync();
             HttpResult result = new(true)
             {
                 Content = await JsonSerializer.DeserializeAsync<dynamic>(contentStream)
@@ -114,7 +114,6 @@ public class TwitterFilteredStreamService : ITwitterFilteredStreamService
         }
         else
         {
-            var contentStream = await response.Content.ReadAsStreamAsync();
             HttpResult result = new(false)
             {
                 ErrorDesc = await JsonSerializer.DeserializeAsync<dynamic>(contentStream)
@@ -128,7 +127,7 @@ public class TwitterFilteredStreamService : ITwitterFilteredStreamService
         var url = _urls.TwitterFilteredStream;
         // Retrieve created at and media key fields
         url += "?tweet.fields=created_at&media.fields=url&expansions=attachments.media_keys";
-        var request = new HttpRequestMessage(HttpMethod.Get, url)
+        using var request = new HttpRequestMessage(HttpMethod.Get, url)
         {
             Headers =
             {
@@ -137,31 +136,30 @@ public class TwitterFilteredStreamService : ITwitterFilteredStreamService
         };
         var httpClient = _httpClientFactory.CreateClient();
         httpClient.Timeout = TimeSpan.FromMilliseconds(Timeout.Infinite);
-        var response = await httpClient.SendAsync(
+        using var response = await httpClient.SendAsync(
             request,
             HttpCompletionOption.ResponseHeadersRead);
 
         if (!response.IsSuccessStatusCode)
             throw new HttpRequestException(response.StatusCode.ToString());
 
-        var contentStream = await response.Content.ReadAsStreamAsync();
-        using (var reader = new StreamReader(contentStream))
+        using var contentStream = await response.Content.ReadAsStreamAsync();
+        using var reader = new StreamReader(contentStream);
+
+        string? line = null;
+        while (!reader.EndOfStream)
         {
-            string? line = null;
-            while (!reader.EndOfStream)
-            {
-                line = reader.ReadLine();
-                if (line == null)
-                    continue;
+            line = reader.ReadLine();
+            if (line == null)
+                continue;
 
-                var tweet = JsonSerializer.Deserialize<GbfHelpTweet>(line,
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var tweet = JsonSerializer.Deserialize<GbfHelpTweet>(line,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-                if (tweet?.Data != null && tweet?.Includes?.Media != null)
-                    yield return tweet;
-            }
-            _log.LogWarning("connection closed => " + line);
+            if (tweet?.Data != null && tweet?.Includes?.Media != null)
+                yield return tweet;
         }
+        _log.LogWarning("connection closed => " + line);
 
     }
 }

@@ -8,7 +8,6 @@ public class GbfHelpRequest
     public string RaidCode { get; init; }
     public string ImageUrl { get; init; }
 
-
     public GbfHelpRequest(Language lang,
         string createdAt,
         string bossName,
