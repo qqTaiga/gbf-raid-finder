@@ -1,9 +1,20 @@
+using CoenM.ImageHash.HashAlgorithms;
 using GbfRaidFinder.Models;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 
 namespace GbfRaidFinder.Services;
 
 public class GbfRaidService : IGbfRaidService
 {
+    private readonly IHttpClientFactory _httpClientFactory;
+
+    public GbfRaidService(IHttpClientFactory httpClientFactory)
+    {
+        _httpClientFactory = httpClientFactory;
+    }
+
     public GbfHelpRequest ConvertGbfHelpTweetToRequest(GbfHelpTweet tweet)
     {
         if (tweet.Includes.Media == null ||
@@ -38,4 +49,23 @@ public class GbfRaidService : IGbfRaidService
         return new GbfHelpRequest(lang, createdAt, bossName, raidCode, imageUrl);
     }
 
+    public async Task<ulong> GetImagePerceptualHashAsync(GbfHelpRequest req)
+    {
+        if (string.IsNullOrWhiteSpace(req.ImageUrl))
+            return 0;
+
+        var httpClient = _httpClientFactory.CreateClient();
+        using var response = await httpClient.GetAsync(req.ImageUrl);
+
+        if (!response.IsSuccessStatusCode)
+            return 0;
+
+        var imageBytes = await response.Content.ReadAsByteArrayAsync();
+        using var pic = Image.Load<Rgba32>(imageBytes);
+        var width = pic.Width;
+        var croppedHeight = (int)(pic.Height * 0.75);
+        pic.Mutate(_ => _.Crop(width, croppedHeight));
+
+        return new PerceptualHash().Hash(pic);
+    }
 }

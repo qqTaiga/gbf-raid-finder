@@ -1,13 +1,28 @@
 using System;
+using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using FluentAssertions;
 using GbfRaidFinder.Models;
 using GbfRaidFinder.Services;
+using GbfRaidFinder.Tests.Utils;
+using Moq;
 using Xunit;
 
 namespace GbfRaidFinder.Tests.Services;
 
 public class GbfRaidServiceTests
 {
+    private GbfRaidService Init(IHttpClientFactory? httpClientFactory)
+    {
+        IHttpClientFactory? lHttpClientFactory = httpClientFactory;
+        if (lHttpClientFactory == null)
+            lHttpClientFactory = new Mock<IHttpClientFactory>().Object;
+
+        return new GbfRaidService(lHttpClientFactory);
+    }
+
     [Theory]
     [InlineData("A6806FCC :参戦ID\n参加者募集！\nLv100 ウリエル\nhttps://t.co/GGyX19yYAG")]
     [InlineData("abc A6806FCC :参戦ID\n参加者募集！\nLv100 ウリエル\nhttps://t.co/GGyX19yYAG")]
@@ -23,7 +38,7 @@ public class GbfRaidServiceTests
             "https://pbs.twimg.com/media/C66623wU8AACyL2.jpg");
         GbfHelpTweetExpansion expansion = new(new[] { media });
         GbfHelpTweet tweet = new(data, expansion);
-        GbfRaidService service = new();
+        GbfRaidService service = Init(null);
 
         // Act
         var raidRequest = service.ConvertGbfHelpTweetToRequest(tweet);
@@ -52,7 +67,7 @@ public class GbfRaidServiceTests
             "https://pbs.twimg.com/media/ESoqGv8VAAA2OzG.jpg");
         GbfHelpTweetExpansion expansion = new(new[] { media });
         GbfHelpTweet tweet = new(data, expansion);
-        GbfRaidService service = new();
+        GbfRaidService service = Init(null);
 
         // Act
         var raidRequest = service.ConvertGbfHelpTweetToRequest(tweet);
@@ -84,7 +99,7 @@ public class GbfRaidServiceTests
             mediaUrl);
         GbfHelpTweetExpansion expansion = new(new[] { media });
         GbfHelpTweet tweet = new(data, expansion);
-        GbfRaidService service = new();
+        GbfRaidService service = Init(null);
 
         // Act
         Action act = () => service.ConvertGbfHelpTweetToRequest(tweet);
@@ -105,7 +120,7 @@ public class GbfRaidServiceTests
             "https://pbs.twimg.com/media/ESoqGv8VAAA2OzG.jpg");
         GbfHelpTweetExpansion expansion = new(new[] { media, media });
         GbfHelpTweet tweet = new(data, expansion);
-        GbfRaidService service = new();
+        GbfRaidService service = Init(null);
 
         // Act
         Action act = () => service.ConvertGbfHelpTweetToRequest(tweet);
@@ -126,7 +141,7 @@ public class GbfRaidServiceTests
             "https://pbs.twimg.com/media/ESoqGv8VAAA2OzG.jpg");
         GbfHelpTweetExpansion expansion = new(new[] { media });
         GbfHelpTweet tweet = new(data, expansion);
-        GbfRaidService service = new();
+        GbfRaidService service = Init(null);
 
         // Act
         Action act = () => service.ConvertGbfHelpTweetToRequest(tweet);
@@ -149,12 +164,68 @@ public class GbfRaidServiceTests
             "https://pbs.twimg.com/media/ESoqGv8VAAA2OzG.jpg");
         GbfHelpTweetExpansion expansion = new(new[] { media });
         GbfHelpTweet tweet = new(data, expansion);
-        GbfRaidService service = new();
+        GbfRaidService service = Init(null);
 
         // Act
         Action act = () => service.ConvertGbfHelpTweetToRequest(tweet);
 
         // Assert
         act.Should().Throw<ArgumentException>().WithMessage("Invalid text content");
+    }
+
+    [Theory]
+    [InlineData("https://pbs.twimg.com/media/ESoqGv8VAAA2OzG.jpg", "/TestData/lindwurm-eng.jpg")]
+    [InlineData("https://pbs.twimg.com/media/C66623wU8AACyL2.jpg", "/TestData/uriel-jap.jpg")]
+    public async Task GetImagePerceptualHashAsync_Success_ReturnNotZero(string url, string filePath)
+    {
+        // Arrange
+        GbfHelpRequest req = new(Language.Japanese,
+            "2022-03-03T15:32:41.000Z",
+            "Lvl 200 Lindwurm",
+            "B1154E88",
+            url);
+
+        var pic = File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "../../../")
+            + filePath);
+        var httpClient = MockUtils.MockHttpClient(
+                HttpStatusCode.OK,
+                new ByteArrayContent(pic));
+        Mock<IHttpClientFactory> httpClientFactory = new();
+        httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+
+        GbfRaidService service = Init(httpClientFactory.Object);
+
+        // Act
+        var hash = await service.GetImagePerceptualHashAsync(req);
+
+        // Assert
+        hash.Should().NotBe(0);
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("https://pbs.twimg.com/media/C66623wU8.jpg")]
+    public async Task GetImagePerceptualHashAsync_Failed_ReturnZero(string url)
+    {
+        // Arrange
+        GbfHelpRequest req = new(Language.Japanese,
+            "2022-03-03T15:32:41.000Z",
+            "Lvl 200 Lindwurm",
+            "B1154E88",
+            url);
+
+        var httpClient = MockUtils.MockHttpClient(
+                HttpStatusCode.NotFound,
+                new StringContent("{\"a\": \"a\"}"));
+        Mock<IHttpClientFactory> httpClientFactory = new();
+        httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+
+        GbfRaidService service = Init(httpClientFactory.Object);
+
+        // Act
+        var hash = await service.GetImagePerceptualHashAsync(req);
+
+        // Assert
+        hash.Should().Be(0);
     }
 }
