@@ -33,7 +33,7 @@ public class TwitterControllerTests
         TwitterController controller = new(twitterFSServiceMock.Object);
 
         // Act
-        var result = await controller.ModifyRules(input) as OkObjectResult;
+        var result = (OkObjectResult)await controller.ModifyRules(input);
 
         // Assert
         result.Should().NotBeNull();
@@ -60,7 +60,7 @@ public class TwitterControllerTests
         TwitterController controller = new(twitterFSServiceMock.Object);
 
         // Act
-        var result = await controller.ModifyRules(input) as UnprocessableEntityObjectResult;
+        var result = (UnprocessableEntityObjectResult)await controller.ModifyRules(input);
 
         // Assert
         result.Should().NotBeNull();
@@ -77,7 +77,7 @@ public class TwitterControllerTests
         TwitterController controller = new(twitterFSServiceMock.Object);
 
         // Act
-        var result = await controller.RetrieveRules() as OkObjectResult;
+        var result = (OkObjectResult)await controller.RetrieveRules();
 
         // Assert
         result.Should().NotBeNull();
@@ -95,7 +95,7 @@ public class TwitterControllerTests
         TwitterController controller = new(twitterFSServiceMock.Object);
 
         // Act
-        var result = await controller.RetrieveRules() as BadRequestObjectResult;
+        var result = (BadRequestObjectResult)await controller.RetrieveRules();
 
         // Assert
         result.Should().NotBeNull();
