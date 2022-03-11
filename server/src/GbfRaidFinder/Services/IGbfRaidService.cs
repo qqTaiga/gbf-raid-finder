@@ -18,5 +18,5 @@ public interface IGbfRaidService
     /// </summary>
     /// <param name="req">GbfHelpRequest</param>
     /// <returns>Perceptual hash of top 75% of image</returns>
-    public Task<ulong> GetImagePerceptualHashAsync(GbfHelpRequest req);
+    public Task<ulong> GetImagePerceptualHashAsync(string url);
 }

@@ -173,20 +173,12 @@ public class GbfRaidServiceTests
         act.Should().Throw<ArgumentException>().WithMessage("Invalid text content");
     }
 
-    [Theory]
-    [InlineData("https://pbs.twimg.com/media/ESoqGv8VAAA2OzG.jpg", "/TestData/lindwurm-eng.jpg")]
-    [InlineData("https://pbs.twimg.com/media/C66623wU8AACyL2.jpg", "/TestData/uriel-jap.jpg")]
-    public async Task GetImagePerceptualHashAsync_Success_ReturnNotZero(string url, string filePath)
+    [Fact]
+    public async Task GetImagePerceptualHashAsync_Success_ReturnNotZero()
     {
         // Arrange
-        GbfHelpRequest req = new(Language.Japanese,
-            "2022-03-03T15:32:41.000Z",
-            "Lvl 200 Lindwurm",
-            "B1154E88",
-            url);
-
         var pic = File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "../../../")
-            + filePath);
+            + "/TestData/uriel-jap.jpg");
         var httpClient = MockUtils.MockHttpClient(
                 HttpStatusCode.OK,
                 new ByteArrayContent(pic));
@@ -196,7 +188,8 @@ public class GbfRaidServiceTests
         GbfRaidService service = Init(httpClientFactory.Object);
 
         // Act
-        var hash = await service.GetImagePerceptualHashAsync(req);
+        var hash = await service.GetImagePerceptualHashAsync(
+            "https://pbs.twimg.com/media/C66623wU8AACyL2.jpg");
 
         // Assert
         hash.Should().NotBe(0);
@@ -208,12 +201,6 @@ public class GbfRaidServiceTests
     public async Task GetImagePerceptualHashAsync_Failed_ReturnZero(string url)
     {
         // Arrange
-        GbfHelpRequest req = new(Language.Japanese,
-            "2022-03-03T15:32:41.000Z",
-            "Lvl 200 Lindwurm",
-            "B1154E88",
-            url);
-
         var httpClient = MockUtils.MockHttpClient(
                 HttpStatusCode.NotFound,
                 new StringContent("{\"a\": \"a\"}"));
@@ -223,7 +210,7 @@ public class GbfRaidServiceTests
         GbfRaidService service = Init(httpClientFactory.Object);
 
         // Act
-        var hash = await service.GetImagePerceptualHashAsync(req);
+        var hash = await service.GetImagePerceptualHashAsync(url);
 
         // Assert
         hash.Should().Be(0);

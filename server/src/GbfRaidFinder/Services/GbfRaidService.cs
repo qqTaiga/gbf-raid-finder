@@ -49,13 +49,13 @@ public class GbfRaidService : IGbfRaidService
         return new GbfHelpRequest(lang, createdAt, bossName, raidCode, imageUrl);
     }
 
-    public async Task<ulong> GetImagePerceptualHashAsync(GbfHelpRequest req)
+    public async Task<ulong> GetImagePerceptualHashAsync(string url)
     {
-        if (string.IsNullOrWhiteSpace(req.ImageUrl))
+        if (string.IsNullOrWhiteSpace(url))
             return 0;
 
         var httpClient = _httpClientFactory.CreateClient();
-        using var response = await httpClient.GetAsync(req.ImageUrl);
+        using var response = await httpClient.GetAsync(url);
 
         if (!response.IsSuccessStatusCode)
             return 0;
