@@ -54,6 +54,9 @@ public class GbfRaidService : IGbfRaidService
         if (string.IsNullOrWhiteSpace(url))
             return 0;
 
+        if (!url.StartsWith("https://pbs.twimg.com/media/"))
+            return 0;
+
         var httpClient = _httpClientFactory.CreateClient();
         using var response = await httpClient.GetAsync(url);
 

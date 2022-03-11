@@ -13,10 +13,11 @@ public interface IGbfRaidService
     public GbfHelpRequest ConvertGbfHelpTweetToRequest(GbfHelpTweet tweet);
 
     /// <summary>
-    /// Get image from <paramref name="req"/>'s ImageUrl, use top 75% of image to calculate
-    /// perceptual hash. Return 0 if the ImageUrl is null or cannot get the image.
+    /// Get image from <paramref name="url"/>'s Twitter media link, use top 75% of image to 
+    /// calculate perceptual hash. Return 0 if the <paramref name="url"/> is blank, is invalid
+    /// Twitter media link or failed to get the image.
     /// </summary>
-    /// <param name="req">GbfHelpRequest</param>
+    /// <param name="url">Twitter media link</param>
     /// <returns>Perceptual hash of top 75% of image</returns>
     public Task<ulong> GetImagePerceptualHashAsync(string url);
 }

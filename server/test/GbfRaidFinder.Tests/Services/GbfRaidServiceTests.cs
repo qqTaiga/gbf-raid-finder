@@ -215,4 +215,18 @@ public class GbfRaidServiceTests
         // Assert
         hash.Should().Be(0);
     }
+
+    [Fact]
+    public async Task GetImagePerceptualHashAsync_InvalidTwitterMediaLink_ReturnZero()
+    {
+        // Arrange
+        GbfRaidService service = Init(null);
+
+        // Act
+        var hash = await service.GetImagePerceptualHashAsync(
+            "https://pb.twimg.com/media/C66623wU8.jpg");
+
+        // Assert
+        hash.Should().Be(0);
+    }
 }
