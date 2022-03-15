@@ -10,7 +10,7 @@ public interface IGbfRaidService
     /// <param name="tweet">GbfHelpTweet get from stream</param>
     /// <returns>GbfHelpRequest</returns>
     /// <exception cref="ArgumentException">Missing or invalid value</exception>
-    public GbfHelpRequest ConvertGbfHelpTweetToRequest(GbfHelpTweet tweet);
+    GbfHelpRequest ConvertGbfHelpTweetToRequest(GbfHelpTweet tweet);
 
     /// <summary>
     /// Get image from <paramref name="url"/>'s Twitter media link, use top 75% of image to 
@@ -19,5 +19,5 @@ public interface IGbfRaidService
     /// </summary>
     /// <param name="url">Twitter media link</param>
     /// <returns>Perceptual hash of top 75% of image</returns>
-    public Task<ulong> GetImagePerceptualHashAsync(string url);
+    Task<ulong> GetImagePerceptualHashAsync(string url);
 }
