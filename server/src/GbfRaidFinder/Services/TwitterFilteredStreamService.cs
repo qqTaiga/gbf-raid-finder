@@ -150,7 +150,7 @@ public class TwitterFilteredStreamService : ITwitterFilteredStreamService
         while (!reader.EndOfStream)
         {
             line = reader.ReadLine();
-            if (line == null)
+            if (string.IsNullOrWhiteSpace(line))
                 continue;
 
             var tweet = JsonSerializer.Deserialize<GbfHelpTweet>(line,

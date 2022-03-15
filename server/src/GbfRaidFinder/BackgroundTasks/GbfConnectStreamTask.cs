@@ -40,6 +40,7 @@ public class GbfConnectStreamTask : BackgroundService
                         : boss.JapName == req.BossName)
                     {
                         isNameExist = true;
+                        boss.LastEncounterAt = DateTime.Now;
                         _inMemService.AddRaidCode(boss.PerceptualHash,
                             new(req.RaidCode, req.CreatedAt));
                         // TODO: add send latest code to client
@@ -58,6 +59,7 @@ public class GbfConnectStreamTask : BackgroundService
                 if (_inMemService.Bosses.ContainsKey(perceptualHash))
                 {
                     var boss = _inMemService.Bosses[perceptualHash];
+                    boss.LastEncounterAt = DateTime.Now;
                     if (req.Lang == Language.English)
                         boss.EngName = req.BossName;
                     else

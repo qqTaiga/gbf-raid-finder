@@ -1,3 +1,4 @@
+using GbfRaidFinder.BackgroundTasks;
 using GbfRaidFinder.Hubs;
 using GbfRaidFinder.Models.Settings;
 using GbfRaidFinder.Services;
@@ -25,7 +26,7 @@ try
     builder.Services.AddSingleton<IInMemBossesService, InMemBossesService>();
     builder.Services.AddTransient<IGbfRaidService, GbfRaidService>();
     builder.Services.AddTransient<ITwitterFilteredStreamService, TwitterFilteredStreamService>();
-    // builder.Services.AddHostedService<GbfConnectStreamTask>();
+    builder.Services.AddHostedService<GbfConnectStreamTask>();
     builder.Services.AddSignalR();
     builder.Services.AddCors(options =>
     {
