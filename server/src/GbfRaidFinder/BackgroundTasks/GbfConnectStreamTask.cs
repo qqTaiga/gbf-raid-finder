@@ -53,6 +53,7 @@ public class GbfConnectStreamTask : BackgroundService
 
                 var perceptualHash = await
                     _gbfRaidService.GetImagePerceptualHashAsync(req.ImageUrl);
+                // TODO: add mapper to map perceptual hash for some boss with different image in different language
 
                 if (_inMemService.Bosses.ContainsKey(perceptualHash))
                 {
@@ -74,7 +75,9 @@ public class GbfConnectStreamTask : BackgroundService
                     else
                         newBoss.JapName = req.BossName;
 
-                    _inMemService.AddRaidBoss(newBoss);
+                    var isAdded = _inMemService.AddRaidBoss(newBoss);
+                    if (!isAdded)
+                        _log.LogWarning($"Cannot add boss- {req.BossName}, hash- {perceptualHash}");
                 }
             }
             catch (ArgumentException ex)
