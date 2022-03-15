@@ -10,6 +10,11 @@ public interface IInMemBossesService
     Dictionary<ulong, GbfRaidBoss> Bosses { get; init; }
 
     /// <summary>
+    /// Maximum number of raid codes that can be stored for each boss.
+    /// </summary>
+    int MAXRAIDCODECOUNT { get; }
+
+    /// <summary>
     /// Add <paramref name="raidBoss"/> to <c>Bosses</c> dictionary.
     /// </summary>
     /// <param name="raidBoss">New raid boss</param>

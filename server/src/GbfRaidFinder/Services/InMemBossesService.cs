@@ -5,6 +5,7 @@ namespace GbfRaidFinder.Services;
 public class InMemBossesService : IInMemBossesService
 {
     public Dictionary<ulong, GbfRaidBoss> Bosses { get; init; }
+    public int MAXRAIDCODECOUNT => 7;
 
     public InMemBossesService()
     {
@@ -23,7 +24,7 @@ public class InMemBossesService : IInMemBossesService
     public void AddRaidCode(ulong perceptualHash, GbfRaidCode raidCode)
     {
         var codes = Bosses[perceptualHash].RaidCodes;
-        if (codes.Count >= 5)
+        if (codes.Count >= MAXRAIDCODECOUNT)
             codes.Dequeue();
         codes.Enqueue(raidCode);
     }
