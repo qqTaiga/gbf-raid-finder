@@ -6,16 +6,19 @@ namespace GbfRaidFinder.BackgroundTasks;
 public class GbfConnectStreamTask : BackgroundService
 {
     private readonly ILogger<GbfConnectStreamTask> _log;
+    private readonly IGbfMapperService _gbfMapperService;
     private readonly IGbfRaidService _gbfRaidService;
     private readonly IInMemBossesService _inMemService;
     private readonly ITwitterFilteredStreamService _twitterFSService;
 
     public GbfConnectStreamTask(ILogger<GbfConnectStreamTask> log,
+        IGbfMapperService gbfMapperService,
         IGbfRaidService gbfRaidService,
         IInMemBossesService inMemService,
         ITwitterFilteredStreamService twitterFSService)
     {
         _log = log;
+        _gbfMapperService = gbfMapperService;
         _gbfRaidService = gbfRaidService;
         _inMemService = inMemService;
         _twitterFSService = twitterFSService;
@@ -35,8 +38,8 @@ public class GbfConnectStreamTask : BackgroundService
                 foreach (var boss in raidBosses)
                 {
                     if (req.Lang == Language.English
-                        ? boss.EngName == req.BossName
-                        : boss.JapName == req.BossName)
+                        ? String.Equals(boss.EngName, req.BossName)
+                        : String.Equals(boss.JapName, req.BossName))
                     {
                         isNameExist = true;
                         boss.LastEncounterAt = DateTime.Now;
@@ -51,9 +54,12 @@ public class GbfConnectStreamTask : BackgroundService
                 if (isNameExist)
                     continue;
 
-                var perceptualHash = await
-                    _gbfRaidService.GetImagePerceptualHashAsync(req.ImageUrl);
-                // TODO: add mapper to map perceptual hash for some boss with different image in different language
+                var perceptualHash = _gbfMapperService.TryMapToJapPerceptualHash(req.BossName,
+                    req.Lang);
+
+                if (perceptualHash == 0)
+                    perceptualHash =
+                        await _gbfRaidService.GetImagePerceptualHashAsync(req.ImageUrl);
 
                 if (_inMemService.Bosses.ContainsKey(perceptualHash))
                 {

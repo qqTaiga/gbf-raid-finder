@@ -23,11 +23,17 @@ try
 
     builder.Services.Configure<Urls>(builder.Configuration.GetSection(nameof(Urls)));
     builder.Services.Configure<Keys>(builder.Configuration.GetSection(nameof(Keys)));
+
     builder.Services.AddSingleton<IInMemBossesService, InMemBossesService>();
+    builder.Services.AddSingleton<IGbfMapperService, GbfMapperService>();
+
     builder.Services.AddTransient<IGbfRaidService, GbfRaidService>();
     builder.Services.AddTransient<ITwitterFilteredStreamService, TwitterFilteredStreamService>();
+
     builder.Services.AddHostedService<GbfConnectStreamTask>();
+
     builder.Services.AddSignalR();
+
     builder.Services.AddCors(options =>
     {
         options.AddPolicy("ClientPermission", policy =>
