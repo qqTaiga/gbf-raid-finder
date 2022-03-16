@@ -1,4 +1,4 @@
-using GbfRaidFinder.BackgroundTasks;
+using GbfRaidFinder.BackgroundTasks;
 using GbfRaidFinder.Hubs;
 using GbfRaidFinder.Models.Settings;
 using GbfRaidFinder.Services;

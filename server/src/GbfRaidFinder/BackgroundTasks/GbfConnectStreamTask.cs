@@ -32,9 +32,8 @@ public class GbfConnectStreamTask : BackgroundService
                 var req = _gbfRaidService.ConvertGbfHelpTweetToRequest(tweet);
                 var raidBosses = _inMemService.Bosses.Values;
                 bool isNameExist = false;
-                for (int i = 0; i < raidBosses.Count(); i++)
+                foreach (var boss in raidBosses)
                 {
-                    var boss = raidBosses.ElementAt(i);
                     if (req.Lang == Language.English
                         ? boss.EngName == req.BossName
                         : boss.JapName == req.BossName)
