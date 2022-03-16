@@ -2,7 +2,7 @@ using GbfRaidFinder.Models;
 
 namespace GbfRaidFinder.Services;
 
-public interface IGbfRaidService
+interface IGbfRaidService
 {
     /// <summary>
     /// Convert GbfHelpTweet to GbfHelpRequest
