@@ -3,7 +3,7 @@ using GbfRaidFinder.Models.Enums;
 
 namespace GbfRaidFinder.Services;
 
-interface ITwitterFilteredStreamService
+public interface ITwitterFilteredStreamService
 {
     /// <summary>
     /// Add rules to twitter filtered stream.

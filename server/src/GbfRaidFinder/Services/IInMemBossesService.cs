@@ -2,7 +2,7 @@ using GbfRaidFinder.Models;
 
 namespace GbfRaidFinder.Services;
 
-interface IInMemBossesService
+public interface IInMemBossesService
 {
     /// <summary>
     /// The collection of raid bosses.
