@@ -4,7 +4,7 @@ namespace GbfRaidFinder.Hubs;
 
 public interface IGbfRaidHub
 {
-    Task ReceiveRaidCode(string perceptualHash, string code);
+    Task ReceiveRaidCode(string perceptualHash, GbfRaidCode code);
 
     Task ReceivePreviousRaidCodes(string perceptualHash, GbfRaidCode[] codes);
 

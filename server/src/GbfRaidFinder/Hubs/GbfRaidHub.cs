@@ -30,12 +30,5 @@ public class GbfRaidHub : Hub<IGbfRaidHub>
     }
 
     public async Task LeaveRaid(string perceptualHash)
-    {
-        await Groups.RemoveFromGroupAsync(Context.ConnectionId, perceptualHash);
-    }
-
-    public async Task PushRaidCode(string perceptualHash, string raidCode)
-    {
-        await Clients.Group(perceptualHash).ReceiveRaidCode(perceptualHash, raidCode);
-    }
+        => await Groups.RemoveFromGroupAsync(Context.ConnectionId, perceptualHash);
 }
