@@ -16,11 +16,11 @@ public class GbfRaidServiceTests
 {
     private GbfRaidService Init(IHttpClientFactory? httpClientFactory)
     {
-        IHttpClientFactory? lHttpClientFactory = httpClientFactory;
-        if (lHttpClientFactory == null)
-            lHttpClientFactory = new Mock<IHttpClientFactory>().Object;
+        IHttpClientFactory? _httpClientFactory = httpClientFactory;
+        if (_httpClientFactory == null)
+            _httpClientFactory = new Mock<IHttpClientFactory>().Object;
 
-        return new GbfRaidService(lHttpClientFactory);
+        return new GbfRaidService(_httpClientFactory);
     }
 
     [Theory]
