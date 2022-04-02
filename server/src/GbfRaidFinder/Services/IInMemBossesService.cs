@@ -7,7 +7,7 @@ public interface IInMemBossesService
     /// <summary>
     /// The collection of raid bosses.
     /// </summary>
-    Dictionary<ulong, GbfRaidBoss> Bosses { get; init; }
+    Dictionary<string, GbfRaidBoss> Bosses { get; init; }
 
     /// <summary>
     /// Maximum number of raid codes that can be stored for each boss.
@@ -25,5 +25,5 @@ public interface IInMemBossesService
     /// </summary>
     /// <param name="raidCode">Raid Code</param>
     /// <param name="perceptualHash">Perceptual hash of the boss image</param>
-    void AddRaidCode(ulong perceptualHash, GbfRaidCode raidCode);
+    void AddRaidCode(string perceptualHash, GbfRaidCode raidCode);
 }

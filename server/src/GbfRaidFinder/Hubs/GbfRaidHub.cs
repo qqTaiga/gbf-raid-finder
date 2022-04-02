@@ -17,9 +17,10 @@ public class GbfRaidHub : Hub<IGbfRaidHub>
         await Groups.AddToGroupAsync(Context.ConnectionId, perceptualHash);
         try
         {
-            var perceptualHashUlong = ulong.Parse(perceptualHash);
+            if (!_inMemService.Bosses.ContainsKey(perceptualHash))
+                return;
 
-            var codes = _inMemService.Bosses[perceptualHashUlong].RaidCodes.ToArray();
+            var codes = _inMemService.Bosses[perceptualHash].RaidCodes.ToArray();
             await Clients.Client(Context.ConnectionId)
                 .ReceivePreviousRaidCodes(perceptualHash, codes);
         }

@@ -7,7 +7,7 @@ public interface IGbfMapperService
     /// This dict use to map boss' eng image perceptual hash to jap image perceptual hash.
     /// Key is boss eng name, and Value is jap perceptual hash.
     /// </summary>
-    Dictionary<string, ulong> BossEngNameJapHash { get; init; }
+    Dictionary<string, string> BossEngNameJapHash { get; init; }
 
     /// <summary>
     /// Get boss jap image perceptual hash according to <paramref name="bossEngName"/>
@@ -17,5 +17,5 @@ public interface IGbfMapperService
     /// <param name="bossEngName">Boss eng name</param>
     /// <param name="lang">Language of the tweet</param>
     /// <returns>Perceptual hash</returns>
-    ulong TryMapToJapPerceptualHash(string bossEngName, Language lang);
+    string TryMapToJapPerceptualHash(string bossEngName, Language lang);
 }

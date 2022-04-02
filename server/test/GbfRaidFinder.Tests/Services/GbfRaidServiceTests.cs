@@ -192,7 +192,7 @@ public class GbfRaidServiceTests
             "https://pbs.twimg.com/media/C66623wU8AACyL2.jpg");
 
         // Assert
-        hash.Should().NotBe(0);
+        hash.Should().NotBe("");
     }
 
     [Theory]
@@ -213,7 +213,7 @@ public class GbfRaidServiceTests
         var hash = await service.GetImagePerceptualHashAsync(url);
 
         // Assert
-        hash.Should().Be(0);
+        hash.Should().Be("");
     }
 
     [Fact]
@@ -227,6 +227,6 @@ public class GbfRaidServiceTests
             "https://pb.twimg.com/media/C66623wU8.jpg");
 
         // Assert
-        hash.Should().Be(0);
+        hash.Should().Be("");
     }
 }

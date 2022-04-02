@@ -18,7 +18,7 @@ public class GbfMapperServiceTests
         var perceptualHash = service.TryMapToJapPerceptualHash(bossEngName, lang);
 
         // Assert
-        perceptualHash.Should().Be(17682549972253862000);
+        perceptualHash.Should().Be("17682549972253862360");
     }
 
     [Fact]
@@ -33,7 +33,7 @@ public class GbfMapperServiceTests
         var perceptualHash = service.TryMapToJapPerceptualHash(bossEngName, lang);
 
         // Assert
-        perceptualHash.Should().Be(0);
+        perceptualHash.Should().Be("");
     }
 
     [Fact]
@@ -48,6 +48,6 @@ public class GbfMapperServiceTests
         var perceptualHash = service.TryMapToJapPerceptualHash(bossEngName, lang);
 
         // Assert
-        perceptualHash.Should().Be(0);
+        perceptualHash.Should().Be("");
     }
 }

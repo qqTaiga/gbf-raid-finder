@@ -19,5 +19,5 @@ public interface IGbfRaidService
     /// </summary>
     /// <param name="url">Twitter media link</param>
     /// <returns>Perceptual hash of top 75% of image</returns>
-    Task<ulong> GetImagePerceptualHashAsync(string url);
+    Task<string> GetImagePerceptualHashAsync(string url);
 }

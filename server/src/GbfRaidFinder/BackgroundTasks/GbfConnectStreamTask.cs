@@ -71,9 +71,8 @@ public class GbfConnectStreamTask : BackgroundService
             var perceptualHash = _gbfMapperService.TryMapToJapPerceptualHash(req.BossName,
                 req.Lang);
 
-            if (perceptualHash == 0)
-                perceptualHash =
-                    await _gbfRaidService.GetImagePerceptualHashAsync(req.ImageUrl);
+            if (string.IsNullOrWhiteSpace(perceptualHash))
+                perceptualHash = await _gbfRaidService.GetImagePerceptualHashAsync(req.ImageUrl);
 
             if (_inMemService.Bosses.ContainsKey(perceptualHash))
             {

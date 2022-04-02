@@ -49,19 +49,19 @@ public class GbfRaidService : IGbfRaidService
         return new GbfHelpRequest(lang, createdAt, bossName, raidCode, imageUrl);
     }
 
-    public async Task<ulong> GetImagePerceptualHashAsync(string url)
+    public async Task<string> GetImagePerceptualHashAsync(string url)
     {
         if (string.IsNullOrWhiteSpace(url))
-            return 0;
+            return "";
 
         if (!url.StartsWith("https://pbs.twimg.com/media/"))
-            return 0;
+            return "";
 
         var httpClient = _httpClientFactory.CreateClient();
         using var response = await httpClient.GetAsync(url);
 
         if (!response.IsSuccessStatusCode)
-            return 0;
+            return "";
 
         var imageBytes = await response.Content.ReadAsByteArrayAsync();
         using var pic = Image.Load<Rgba32>(imageBytes);
@@ -69,6 +69,6 @@ public class GbfRaidService : IGbfRaidService
         var croppedHeight = (int)(pic.Height * 0.75);
         pic.Mutate(_ => _.Crop(width, croppedHeight));
 
-        return new PerceptualHash().Hash(pic);
+        return new PerceptualHash().Hash(pic).ToString();
     }
 }

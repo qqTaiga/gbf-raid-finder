@@ -64,7 +64,7 @@ public class GbfConnectStreamTaskTests
 
         GbfHelpRequest req = new(Language.Japanese, createdAt, bossName, code, imageUrl);
 
-        ulong perceptualhash = 1;
+        string perceptualhash = "1";
         Mock<IGbfRaidService> gbfRaidService = new();
         gbfRaidService.Setup(_ =>
             _.ConvertGbfHelpTweetToRequest(tweet)).Returns(req);
@@ -116,7 +116,7 @@ public class GbfConnectStreamTaskTests
         GbfHelpTweet tweet2 = new(data2, expansion);
         GbfHelpRequest req2 = new(Language.Japanese, createdAt2, bossName, code2, imageUrl);
 
-        ulong perceptualhash = 1;
+        string perceptualhash = "1";
         Mock<IGbfRaidService> gbfRaidService = new();
         gbfRaidService.Setup(_ =>
             _.ConvertGbfHelpTweetToRequest(tweet1)).Returns(req1);
@@ -184,7 +184,7 @@ public class GbfConnectStreamTaskTests
         GbfHelpTweet tweet2 = new(data2, expansion2);
         GbfHelpRequest req2 = new(Language.English, createdAt2, bossName2, code2, imageUrl1);
 
-        ulong perceptualhash = 1;
+        string perceptualhash = "1";
         Mock<IGbfRaidService> gbfRaidService = new();
         gbfRaidService.Setup(_ =>
             _.ConvertGbfHelpTweetToRequest(tweet1)).Returns(req1);
@@ -252,7 +252,7 @@ public class GbfConnectStreamTaskTests
         GbfHelpTweet tweet2 = new(data2, expansion2);
         GbfHelpRequest req2 = new(Language.English, createdAt2, bossName2, code2, imageUrl2);
 
-        ulong perceptualhash = 17682549972253862000;
+        string perceptualhash = "17682549972253862360";
         Mock<IGbfRaidService> gbfRaidService = new();
         gbfRaidService.Setup(_ =>
             _.ConvertGbfHelpTweetToRequest(tweet1)).Returns(req1);
@@ -261,7 +261,7 @@ public class GbfConnectStreamTaskTests
         gbfRaidService.Setup(_ =>
             _.GetImagePerceptualHashAsync(imageUrl1)).ReturnsAsync(perceptualhash);
         gbfRaidService.Setup(_ =>
-            _.GetImagePerceptualHashAsync(It.IsNotIn<string>(imageUrl1))).ReturnsAsync(1UL);
+            _.GetImagePerceptualHashAsync(It.IsNotIn<string>(imageUrl1))).ReturnsAsync("1");
 
         InMemBossesService inMemService = new();
 
