@@ -22,8 +22,6 @@ interface AddButtonProps {
     onClick: () => void;
 }
 
-const AddButton = (props: AddButtonProps) => {
+export const AddButton = (props: AddButtonProps) => {
     return <Button onClick={props.onClick}>+</Button>;
 };
-
-export default AddButton;

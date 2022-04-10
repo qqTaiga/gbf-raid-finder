@@ -9,8 +9,6 @@ interface ThemeButtonProps {
     toggleTheme: () => void;
 }
 
-const ThemeButton = (props: ThemeButtonProps) => {
+export const ThemeButton = (props: ThemeButtonProps) => {
     return <Button onClick={props.toggleTheme}>Toggle</Button>;
 };
-
-export default ThemeButton;

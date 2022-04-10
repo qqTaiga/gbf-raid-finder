@@ -8,7 +8,7 @@ interface ModalHeaderProps {
     showCloseButton: boolean;
 }
 
-const ModalTitle = (props: ModalHeaderProps) => {
+export const ModalTitle = (props: ModalHeaderProps) => {
     return (
         <Header>
             atre
@@ -16,5 +16,3 @@ const ModalTitle = (props: ModalHeaderProps) => {
         </Header>
     );
 };
-
-export default ModalTitle;

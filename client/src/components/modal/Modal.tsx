@@ -16,6 +16,7 @@ const ModalContent = styled.div`
     background: white;
     height: 90%;
     width: 70%;
+    overflow-y: scroll;
 `;
 
 const ModalCloseButton = styled.button`
@@ -40,5 +41,3 @@ export const Modal = (props: ModalProps) => {
         </ModalBoard>
     );
 };
-
-export default Modal;
