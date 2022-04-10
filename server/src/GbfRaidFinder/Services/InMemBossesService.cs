@@ -1,4 +1,5 @@
 using GbfRaidFinder.Models;
+using GbfRaidFinder.Models.Dtos;
 
 namespace GbfRaidFinder.Services;
 
@@ -27,5 +28,12 @@ public class InMemBossesService : IInMemBossesService
         if (codes.Count >= MAXRAIDCODECOUNT)
             codes.Dequeue();
         codes.Enqueue(raidCode);
+    }
+
+    public IEnumerable<GbfRaidBossDto> ListRaidBosses()
+    {
+        var bossList = Bosses.Values;
+        foreach (var boss in bossList)
+            yield return new GbfRaidBossDto(boss.PerceptualHash, boss.EngName, boss.JapName);
     }
 }

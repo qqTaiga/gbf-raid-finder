@@ -1,4 +1,5 @@
 using GbfRaidFinder.Models;
+using GbfRaidFinder.Models.Dtos;
 
 namespace GbfRaidFinder.Services;
 
@@ -26,4 +27,10 @@ public interface IInMemBossesService
     /// <param name="raidCode">Raid Code</param>
     /// <param name="perceptualHash">Perceptual hash of the boss image</param>
     void AddRaidCode(string perceptualHash, GbfRaidCode raidCode);
+
+    /// <summary>
+    /// List saved bosses.
+    /// </summary>
+    /// <returns>The list of raid bosses saved in Bosses</returns>
+    IEnumerable<GbfRaidBossDto> ListRaidBosses();
 }

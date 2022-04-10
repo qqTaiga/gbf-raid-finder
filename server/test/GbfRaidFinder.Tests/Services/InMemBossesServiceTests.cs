@@ -85,4 +85,25 @@ public class InMemBossesServiceTests
         codes.ElementAt(0).Code.Should().Be("1");
         codes.ElementAt(max - 1).Code.Should().Be(max.ToString());
     }
+
+    [Fact]
+    public void ListRaidBosses_Success_ReturnBossesList()
+    {
+        // Arrange
+        GbfRaidBoss boss = new("1", new("0", ""));
+        boss.JapName = "Jap";
+        boss.EngName = "Eng";
+        InMemBossesService service = new();
+        service.AddRaidBoss(boss);
+
+        // Act
+        var bossesList = service.ListRaidBosses();
+
+        // Assert
+        bossesList.Count().Should().Be(1);
+        var b = bossesList.ElementAt(0);
+        b.PerceptualHash.Should().Be(boss.PerceptualHash);
+        b.EngName.Should().Be(boss.EngName);
+        b.JapName.Should().Be(boss.JapName);
+    }
 }
