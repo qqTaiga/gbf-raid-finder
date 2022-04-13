@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import styled from 'styled-components';
 
 const ModalBoard = styled.div`
@@ -24,7 +25,7 @@ const ModalCloseButton = styled.button`
 `;
 
 interface ModalProps {
-    children: React.ReactNode;
+    children: ReactNode;
     isOpen: boolean;
     onClose: () => void;
 }
