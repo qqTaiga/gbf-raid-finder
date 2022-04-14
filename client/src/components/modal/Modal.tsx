@@ -18,6 +18,7 @@ const ModalContent = styled.div`
     height: 90%;
     width: 70%;
     overflow-y: scroll;
+    padding: 10px 40px;
 `;
 
 const ModalCloseButton = styled.button`
