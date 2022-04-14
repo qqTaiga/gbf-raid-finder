@@ -52,6 +52,7 @@ public class GbfConnectStreamTaskTests
         var createdAt = "2022-03-03T15:32:41.000Z";
         var bossName = "Lv100 ウリエル";
         var code = "A6806FCC";
+        var level = 100;
         var imageUrl = "https://pbs.twimg.com/media/ESoqGv8VAAA2OzG.jpg";
         GbfHelpTweetData data = new(createdAt,
             "1499407423215333378",
@@ -62,7 +63,7 @@ public class GbfConnectStreamTaskTests
         GbfHelpTweetExpansion expansion = new(new[] { media });
         GbfHelpTweet tweet = new(data, expansion);
 
-        GbfHelpRequest req = new(Language.Japanese, createdAt, bossName, code, imageUrl);
+        GbfHelpRequest req = new(Language.Japanese, createdAt, bossName, level, code, imageUrl);
 
         string perceptualhash = "1";
         Mock<IGbfRaidService> gbfRaidService = new();
@@ -94,6 +95,7 @@ public class GbfConnectStreamTaskTests
     {
         // Arrange
         var bossName = "Lv100 ウリエル";
+        var level = 100;
         var imageUrl = "https://pbs.twimg.com/media/ESoqGv8VAAA2OzG.jpg";
         GbfHelpTweetMedia media = new("3_1236847343103705088",
             "photo",
@@ -106,7 +108,7 @@ public class GbfConnectStreamTaskTests
             "1499407423215333378",
             $"{code1} :参戦ID\n参加者募集！\n{bossName}\nhttps://t.co/GGyX19yYAG");
         GbfHelpTweet tweet1 = new(data1, expansion);
-        GbfHelpRequest req1 = new(Language.Japanese, createdAt1, bossName, code1, imageUrl);
+        GbfHelpRequest req1 = new(Language.Japanese, createdAt1, bossName, level, code1, imageUrl);
 
         var createdAt2 = "2022-03-03T15:33:41.000Z";
         var code2 = "AB381GEE";
@@ -114,7 +116,7 @@ public class GbfConnectStreamTaskTests
             "1499407423215333378",
             $"{code2} :参戦ID\n参加者募集！\n{bossName}\nhttps://t.co/GGyX19yYAG");
         GbfHelpTweet tweet2 = new(data2, expansion);
-        GbfHelpRequest req2 = new(Language.Japanese, createdAt2, bossName, code2, imageUrl);
+        GbfHelpRequest req2 = new(Language.Japanese, createdAt2, bossName, level, code2, imageUrl);
 
         string perceptualhash = "1";
         Mock<IGbfRaidService> gbfRaidService = new();
@@ -158,6 +160,7 @@ public class GbfConnectStreamTaskTests
         // Arrange
         var createdAt1 = "2022-03-03T15:32:41.000Z";
         var bossName1 = "Lv100 ウリエル";
+        var level1 = 100;
         var code1 = "A6806FCC";
         var imageUrl1 = "https://pbs.twimg.com/media/ESoqGv8VAAA2OzG.jpg";
         GbfHelpTweetData data1 = new(createdAt1,
@@ -168,10 +171,11 @@ public class GbfConnectStreamTaskTests
             imageUrl1);
         GbfHelpTweetExpansion expansion1 = new(new[] { media1 });
         GbfHelpTweet tweet1 = new(data1, expansion1);
-        GbfHelpRequest req1 = new(Language.Japanese, createdAt1, bossName1, code1, imageUrl1);
+        GbfHelpRequest req1 = new(Language.Japanese, createdAt1, bossName1, level1, code1, imageUrl1);
 
         var createdAt2 = "2022-03-03T15:32:55.000Z";
         var bossName2 = "Lvl 100 Uriel";
+        var level2 = 100;
         var code2 = "AB3D141E";
         var imageUrl2 = "https://pbs.twimg.com/media/ESoqGv8VAAA2OzG.jpg";
         GbfHelpTweetData data2 = new(createdAt1,
@@ -182,7 +186,7 @@ public class GbfConnectStreamTaskTests
             imageUrl2);
         GbfHelpTweetExpansion expansion2 = new(new[] { media2 });
         GbfHelpTweet tweet2 = new(data2, expansion2);
-        GbfHelpRequest req2 = new(Language.English, createdAt2, bossName2, code2, imageUrl1);
+        GbfHelpRequest req2 = new(Language.English, createdAt2, bossName2, level2, code2, imageUrl1);
 
         string perceptualhash = "1";
         Mock<IGbfRaidService> gbfRaidService = new();
@@ -226,6 +230,7 @@ public class GbfConnectStreamTaskTests
         // Arrange
         var createdAt1 = "2022-03-03T15:32:41.000Z";
         var bossName1 = "Lv120 メドゥーサ";
+        var level1 = 120;
         var code1 = "A6806FCC";
         var imageUrl1 = "https://pbs.twimg.com/media/ESoqGv8VAAA2OzG.jpg";
         GbfHelpTweetData data1 = new(createdAt1,
@@ -236,10 +241,11 @@ public class GbfConnectStreamTaskTests
             imageUrl1);
         GbfHelpTweetExpansion expansion1 = new(new[] { media1 });
         GbfHelpTweet tweet1 = new(data1, expansion1);
-        GbfHelpRequest req1 = new(Language.Japanese, createdAt1, bossName1, code1, imageUrl1);
+        GbfHelpRequest req1 = new(Language.Japanese, createdAt1, bossName1, level1, code1, imageUrl1);
 
         var createdAt2 = "2022-03-03T15:32:55.000Z";
         var bossName2 = "Lvl 120 Medusa";
+        var level2 = 120;
         var code2 = "AB3D141E";
         var imageUrl2 = "https://pbs.twimg.com/media/CYBki-CUkAQVWW_?format=jpg&name=medium";
         GbfHelpTweetData data2 = new(createdAt1,
@@ -250,7 +256,7 @@ public class GbfConnectStreamTaskTests
             imageUrl2);
         GbfHelpTweetExpansion expansion2 = new(new[] { media2 });
         GbfHelpTweet tweet2 = new(data2, expansion2);
-        GbfHelpRequest req2 = new(Language.English, createdAt2, bossName2, code2, imageUrl2);
+        GbfHelpRequest req2 = new(Language.English, createdAt2, bossName2, level2, code2, imageUrl2);
 
         string perceptualhash = "17682549972253862360";
         Mock<IGbfRaidService> gbfRaidService = new();

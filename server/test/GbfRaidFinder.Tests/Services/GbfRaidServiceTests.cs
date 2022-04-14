@@ -48,6 +48,7 @@ public class GbfRaidServiceTests
         raidRequest.Lang.Should().Be(Language.Japanese);
         raidRequest.CreatedAt.Should().Be("2022-03-03T16:08:11.000Z");
         raidRequest.BossName.Should().Be("Lv100 ウリエル");
+        raidRequest.Level.Should().Be(100);
         raidRequest.RaidCode.Should().Be("A6806FCC");
         raidRequest.ImageUrl.Should().Be("https://pbs.twimg.com/media/C66623wU8AACyL2.jpg");
     }
@@ -77,7 +78,46 @@ public class GbfRaidServiceTests
         raidRequest.Lang.Should().Be(Language.English);
         raidRequest.CreatedAt.Should().Be("2022-03-03T15:32:41.000Z");
         raidRequest.BossName.Should().Be("Lvl 200 Lindwurm");
+        raidRequest.Level.Should().Be(200);
         raidRequest.RaidCode.Should().Be("B1154E88");
+        raidRequest.ImageUrl.Should().Be("https://pbs.twimg.com/media/ESoqGv8VAAA2OzG.jpg");
+    }
+
+    [Theory]
+    [InlineData("B6733D90 :参戦ID\n参加者募集！\n四大天司ＨＬ\nhttps://t.co/VylsLCm88b",
+        Language.Japanese,
+        "四大天司ＨＬ",
+        "B6733D90")]
+    [InlineData("35819802 :Battle ID\nI need backup!\nHuanglong & Qilin (Impossible)\nhttps://t.co/VylsLCm88b",
+        Language.English,
+        "Huanglong & Qilin (Impossible)",
+        "35819802")]
+    public void ConvertGbfHelpTweetToRequest_NoLevel_LevelEqual999(string text,
+        Language lang,
+        string bossName,
+        string raidCode)
+    {
+        // Arrange
+        GbfHelpTweetData data = new("2022-03-03T15:32:41.000Z",
+            "1499407423215333378",
+            text);
+        GbfHelpTweetMedia media = new("3_1236847343103705088",
+            "photo",
+            "https://pbs.twimg.com/media/ESoqGv8VAAA2OzG.jpg");
+        GbfHelpTweetExpansion expansion = new(new[] { media });
+        GbfHelpTweet tweet = new(data, expansion);
+        GbfRaidService service = Init(null);
+
+        // Act
+        var raidRequest = service.ConvertGbfHelpTweetToRequest(tweet);
+
+        // Assert
+        raidRequest.Should().NotBeNull();
+        raidRequest.Lang.Should().Be(lang);
+        raidRequest.CreatedAt.Should().Be("2022-03-03T15:32:41.000Z");
+        raidRequest.BossName.Should().Be(bossName);
+        raidRequest.Level.Should().Be(999);
+        raidRequest.RaidCode.Should().Be(raidCode);
         raidRequest.ImageUrl.Should().Be("https://pbs.twimg.com/media/ESoqGv8VAAA2OzG.jpg");
     }
 

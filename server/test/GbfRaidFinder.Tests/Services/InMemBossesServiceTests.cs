@@ -13,7 +13,7 @@ public class InMemBossesServiceTests
     {
         // Arrange
         GbfRaidCode code = new("", "");
-        GbfRaidBoss boss = new("1", code);
+        GbfRaidBoss boss = new("1", 1, code);
 
         InMemBossesService service = new();
 
@@ -30,7 +30,7 @@ public class InMemBossesServiceTests
     {
         // Arrange
         GbfRaidCode code = new("", "");
-        GbfRaidBoss boss = new("1", code);
+        GbfRaidBoss boss = new("1", 1, code);
 
         InMemBossesService service = new();
         service.AddRaidBoss(boss);
@@ -48,7 +48,7 @@ public class InMemBossesServiceTests
     public void AddRaidCode_QueueLessThan_NoDequeue()
     {
         // Arrange
-        GbfRaidBoss boss = new("1", new("0", ""));
+        GbfRaidBoss boss = new("1", 1, new("0", ""));
         InMemBossesService service = new();
         var max = service.MAXRAIDCODECOUNT;
         service.AddRaidBoss(boss);
@@ -69,7 +69,7 @@ public class InMemBossesServiceTests
     public void AddRaidCode_QueueMoreOrEqual5_Dequeue()
     {
         // Arrange
-        GbfRaidBoss boss = new("1", new("0", ""));
+        GbfRaidBoss boss = new("1", 1, new("0", ""));
         InMemBossesService service = new();
         var max = service.MAXRAIDCODECOUNT;
         service.AddRaidBoss(boss);
@@ -90,7 +90,7 @@ public class InMemBossesServiceTests
     public void ListRaidBosses_Success_ReturnBossesList()
     {
         // Arrange
-        GbfRaidBoss boss = new("1", new("0", ""));
+        GbfRaidBoss boss = new("1", 1, new("0", ""));
         boss.JapName = "Jap";
         boss.EngName = "Eng";
         InMemBossesService service = new();

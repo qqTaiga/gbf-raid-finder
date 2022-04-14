@@ -92,7 +92,7 @@ public class GbfConnectStreamTask : BackgroundService
             else
             {
                 GbfRaidCode raidCode = new(req.RaidCode, req.CreatedAt);
-                GbfRaidBoss newBoss = new(perceptualHash, raidCode);
+                GbfRaidBoss newBoss = new(perceptualHash, req.Level, raidCode);
                 if (req.Lang == Language.English)
                     newBoss.EngName = req.BossName;
                 else

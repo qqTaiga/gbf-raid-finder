@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using GbfRaidFinder.Models;
 using GbfRaidFinder.Models.Dtos;
 
@@ -32,8 +33,14 @@ public class InMemBossesService : IInMemBossesService
 
     public IEnumerable<GbfRaidBossDto> ListRaidBosses()
     {
+        Collection<GbfRaidBossDto> dtoList = new();
         var bossList = Bosses.Values;
         foreach (var boss in bossList)
-            yield return new GbfRaidBossDto(boss.PerceptualHash, boss.EngName, boss.JapName);
+            dtoList.Add(new GbfRaidBossDto(boss.PerceptualHash, boss.EngName, boss.JapName, boss.Level));
+
+        return dtoList
+            .OrderBy(dto => dto.Level)
+            .ThenBy(dto => dto.JapName)
+            .ThenBy(dto => dto.EngName);
     }
 }

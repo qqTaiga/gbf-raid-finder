@@ -41,12 +41,26 @@ public class GbfRaidService : IGbfRaidService
             (lang == Language.English && raidCodeLine.Length < 3))
             throw new ArgumentException("Invalid text content");
 
+        var name = texts[^2];
+        var level = 999;
+        if (lang == Language.Japanese)
+        {
+            if (string.Equals(name.Substring(0, 2), "Lv"))
+                level = int.Parse(name.Split(" ")[0].Substring(2));
+        }
+        else
+        {
+            var s = name.Split(" ");
+            if (string.Equals(s[0], "Lvl"))
+                level = int.Parse(s[1]);
+        }
+
         var createdAt = tweet.Data.Created_At;
-        var bossName = texts[^2];
+        var bossName = name;
         var raidCode = lang == Language.Japanese ? raidCodeLine[^2] : raidCodeLine[^3];
         var imageUrl = tweet.Includes.Media[0].Url;
 
-        return new GbfHelpRequest(lang, createdAt, bossName, raidCode, imageUrl);
+        return new GbfHelpRequest(lang, createdAt, bossName, level, raidCode, imageUrl);
     }
 
     public async Task<string> GetImagePerceptualHashAsync(string url)
