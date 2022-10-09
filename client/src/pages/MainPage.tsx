@@ -18,8 +18,8 @@ const MainPage = () => {
         setIsOpen(true);
     };
 
-    const selectRaid = (boss: GbfRaidBoss) => {
-        joinRaid(boss);
+    const selectRaid = async (boss: GbfRaidBoss) => {
+        await joinRaid(boss);
         setIsOpen(false);
     };
 
@@ -30,19 +30,19 @@ const MainPage = () => {
             <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
                 <ModalTitle showCloseButton={true}>Raid Bosses</ModalTitle>
                 {bossList.map((boss, index) => (
-                    <div key={index} onClick={() => selectRaid(boss)}>
+                    <div key={index} onClick={async () => await selectRaid(boss)}>
                         {boss.japName}
                     </div>
                 ))}
             </Modal>
 
             <FlexBox>
-                {Array.from(raids.values()).map((raid) => (
+                {Object.keys(raids).map((key) => (
                     <BossBoard
-                        key={raid.perceptualHash}
-                        bossName={raid.japName}
-                        raidCodes={raid.raidCode}
-                        onClose={() => quitRaid(raid.perceptualHash)}
+                        key={raids[key].perceptualHash}
+                        bossName={raids[key].japName}
+                        raidCodes={raids[key].raidCode}
+                        onClose={async () => await quitRaid(raids[key].perceptualHash)}
                         copyCode={copyCode}
                     />
                 ))}
