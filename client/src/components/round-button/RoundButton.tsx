@@ -19,9 +19,16 @@ const Button = styled.div`
 `;
 
 interface AddButtonProps {
-    onClick: () => void;
+    /**
+     * Button label
+     */
+    label: string;
+    /**
+     * Optinal click handler
+     */
+    onClick?: () => void;
 }
 
-export const AddButton = (props: AddButtonProps) => {
-    return <Button onClick={props.onClick}>+</Button>;
+export const RoundButton = (props: AddButtonProps) => {
+    return <Button onClick={props.onClick}>{props.label}</Button>;
 };

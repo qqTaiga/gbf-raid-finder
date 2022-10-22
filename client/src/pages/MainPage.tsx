@@ -1,7 +1,7 @@
-import { AddButton } from 'components/add-button';
 import { BossBoard } from 'components/boss-board';
 import { FlexBox } from 'components/flex-box';
 import { Modal, ModalTitle } from 'components/modal';
+import { RoundButton } from 'components/round-button';
 import useGetBossList from 'hooks/useGetBossList';
 import useJoinRaid from 'hooks/useJoinRaid';
 import { useState } from 'react';
@@ -47,7 +47,7 @@ const MainPage = () => {
                     />
                 ))}
             </FlexBox>
-            {!isOpen ? <AddButton onClick={() => openBossList(lang)}></AddButton> : ''}
+            {!isOpen && <RoundButton label="+" onClick={() => openBossList(lang)}></RoundButton>}
         </>
     );
 };
