@@ -3,18 +3,22 @@ import styled from 'styled-components';
 
 const Header = styled.div``;
 
-const CloseButton = styled.div``;
+const CloseButton = styled.div`
+    float: right;
+`;
 
 interface ModalHeaderProps {
     children: ReactNode;
-    showCloseButton: boolean;
+    onClickCloseButton?: () => void;
 }
 
 export const ModalTitle = (props: ModalHeaderProps) => {
     return (
         <Header>
             {props.children}
-            {props.showCloseButton ? <CloseButton></CloseButton> : ''}
+            {props.onClickCloseButton ? (
+                <CloseButton onClick={props.onClickCloseButton}>X</CloseButton>
+            ) : null}
         </Header>
     );
 };

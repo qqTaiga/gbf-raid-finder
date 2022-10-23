@@ -23,12 +23,14 @@ const MainPage = () => {
         setIsOpen(false);
     };
 
+    const closeModal = () => setIsOpen(false);
+
     const copyCode = (code: string) => navigator.clipboard.writeText(code);
 
     return (
         <>
-            <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-                <ModalTitle showCloseButton={true}>Raid Bosses</ModalTitle>
+            <Modal isOpen={isOpen} onClose={closeModal}>
+                <ModalTitle onClickCloseButton={closeModal}>Raid Bosses</ModalTitle>
                 {bossList.map((boss, index) => (
                     <div key={index} onClick={async () => await selectRaid(boss)}>
                         {boss.japName}

@@ -21,10 +21,6 @@ const ModalContent = styled.div`
     padding: 10px 40px;
 `;
 
-const ModalCloseButton = styled.button`
-    border: 1px;
-`;
-
 interface ModalProps {
     children: ReactNode;
     isOpen: boolean;
@@ -36,10 +32,7 @@ export const Modal = (props: ModalProps) => {
 
     return (
         <ModalBoard onClick={props.onClose}>
-            <ModalContent onClick={(e) => e.stopPropagation()}>
-                {props.children}
-                <ModalCloseButton onClick={props.onClose}>Close</ModalCloseButton>
-            </ModalContent>
+            <ModalContent onClick={(e) => e.stopPropagation()}>{props.children}</ModalContent>
         </ModalBoard>
     );
 };

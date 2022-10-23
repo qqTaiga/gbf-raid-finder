@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { GbfRaidCode } from 'types';
-import { calculateTimeDiff } from 'utils/DateTimeUtils';
+import { calculateTimeDiff } from 'utils/dateTimeUtils';
 
 const Board = styled.div`
     width: 480px;

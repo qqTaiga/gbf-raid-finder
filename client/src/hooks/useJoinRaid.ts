@@ -1,6 +1,7 @@
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { useEffect, useState } from 'react';
 import { GbfRaidBoss, GbfRaidCode, Raid } from 'types';
+import { urls } from 'utils/urlUtils';
 
 const useJoinRaid = () => {
     const maxRaidCodeCount = 7;
@@ -9,7 +10,7 @@ const useJoinRaid = () => {
 
     useEffect(() => {
         const connection = new HubConnectionBuilder()
-            .withUrl('http://localhost:5220/raids')
+            .withUrl(urls.websocket.raids())
             .withAutomaticReconnect()
             .build();
 

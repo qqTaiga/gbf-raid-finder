@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { GbfRaidBoss } from 'types';
+import { urls } from 'utils/urlUtils';
 
 const useGetBossList = () => {
     const [bossList, setBossList] = useState<GbfRaidBoss[]>([]);
 
     const getLatestBossList = async (language: string) => {
-        const response = await fetch('gbf-raid-bosses.json');
+        const response = await fetch(urls.api.getBossList());
         const list: GbfRaidBoss[] = await response.json();
         sortBossList(list, language);
         setBossList(list);
