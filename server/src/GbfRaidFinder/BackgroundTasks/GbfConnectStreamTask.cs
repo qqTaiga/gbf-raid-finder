@@ -45,14 +45,12 @@ public class GbfConnectStreamTask : BackgroundService
         {
             var req = _gbfRaidService.ConvertGbfHelpTweetToRequest(tweet);
             var raidBosses = _inMemService.Bosses.Values;
-            bool isNameExist = false;
             foreach (var boss in raidBosses)
             {
                 if (req.Lang == Language.English
                     ? String.Equals(boss.EngName, req.BossName)
                     : String.Equals(boss.JapName, req.BossName))
                 {
-                    isNameExist = true;
                     boss.LastEncounterAt = DateTime.Now;
                     GbfRaidCode raidCode = new(req.RaidCode, req.CreatedAt);
 
@@ -61,12 +59,9 @@ public class GbfConnectStreamTask : BackgroundService
                     await _gbfRaidHub.Clients.Group(boss.PerceptualHash.ToString())
                         .ReceiveRaidCode(boss.PerceptualHash.ToString(), raidCode);
 
-                    break;
+                    return;
                 }
             }
-
-            if (isNameExist)
-                return;
 
             var perceptualHash = _gbfMapperService.TryMapToJapPerceptualHash(req.BossName,
                 req.Lang);
