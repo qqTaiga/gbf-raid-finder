@@ -16,9 +16,9 @@ export const ModalTitle = (props: ModalHeaderProps) => {
     return (
         <Header>
             {props.children}
-            {props.onClickCloseButton ? (
+            {props.onClickCloseButton && (
                 <CloseButton onClick={props.onClickCloseButton}>X</CloseButton>
-            ) : null}
+            )}
         </Header>
     );
 };

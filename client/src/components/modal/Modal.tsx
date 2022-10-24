@@ -11,14 +11,17 @@ const ModalBoard = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    opacity: 0.6;
 `;
 
 const ModalContent = styled.div`
-    background: white;
+    background: ${({ theme }) => theme.backgroundColor};
+    color: ${({ theme }) => theme.color}
     height: 90%;
     width: 70%;
     overflow-y: scroll;
     padding: 10px 40px;
+    border: 1px solid ${({ theme }) => theme.color};
 `;
 
 interface ModalProps {
